@@ -1,5 +1,16 @@
 [
   {
+    "id": 591,
+    "title": "Landing page live at bragfile.jysf.org",
+    "description": "Initial deploy — Cloudflare Pages connected to jysf/bragfile-site on GitHub, custom domain active, /, /og.png, /hero.apng all 200. Hero shows the animated APNG, log section renders 5 real findings, CTA panel uses --signal full-bleed. Future pushes auto-deploy.",
+    "tags": "design,deploy,agent:adal,model:MiniMax-M3,session:e63ece9d-3932-41ea-af57-4f123f01b720",
+    "project": "bragfile-site",
+    "type": "shipped",
+    "impact": "bragfile.dev / bragfile.jysf.org now serves a live, self-hosted landing page; future git pushes auto-deploy and the install CTA conversion is measurable.",
+    "created_at": "2026-09-15T03:35:50Z",
+    "updated_at": "2026-09-15T03:35:50Z"
+  },
+  {
     "id": 590,
     "title": "Animated hero APNG and Cloudflare deploy plumbing shipped",
     "description": "scripts/hero.mjs renders 30-frame APNG (1200x630, 2.1s loop) of real brag spark --week output with bars growing in. Replaces live TerminalFrame in hero. just hero + just deploy + just login added. site: set to bragfile.jysf.org. og.mjs schema bug (date vs created_at) also fixed.",
