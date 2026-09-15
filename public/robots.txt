@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bragfile.dev/sitemap-index.xml

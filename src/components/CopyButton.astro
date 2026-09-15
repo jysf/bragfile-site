@@ -1,0 +1,34 @@
+---
+// Label says what happens. No arrow glyph.
+interface Props { value: string; }
+const { value } = Astro.props;
+---
+<button class="copy" data-value={value}>Copy install command</button>
+
+<style>
+  .copy {
+    background-color: var(--signal);
+    color: var(--base);
+    font-family: var(--font-sans);
+    font-size: var(--size-body);
+    line-height: var(--lh-body);
+    padding: var(--space-1) var(--space-2);
+    border: 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".copy").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(btn.dataset.value ?? "");
+      const original = btn.textContent;
+      btn.textContent = "Copied";
+      // The conversion event that actually matters. Pageviews tell you the
+      // social post worked; this tells you the page worked.
+      (window as any).cfBeacon?.track?.("install_copy");
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    });
+  });
+</script>

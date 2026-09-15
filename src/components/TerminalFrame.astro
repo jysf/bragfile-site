@@ -1,0 +1,36 @@
+---
+// Real output only. Never recolor it. No window chrome, no traffic-light
+// dots — the authenticity is the point. On mobile the frame scrolls
+// horizontally rather than shrinking the type.
+interface Props { command?: string; }
+const { command } = Astro.props;
+---
+<div class="frame">
+  {command && <div class="cmd">$ {command}</div>}
+  <pre><slot /></pre>
+</div>
+
+<style>
+  .frame {
+    background-color: var(--panel);
+    padding: var(--space-3);
+    overflow-x: auto;
+  }
+
+  .cmd {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+    margin-bottom: var(--space-2);
+  }
+
+  pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+    color: var(--output);
+    white-space: pre;
+  }
+</style>

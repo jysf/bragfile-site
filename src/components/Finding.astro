@@ -1,0 +1,38 @@
+---
+// A `learn` entry rendered as an investigation finding.
+// Numbering is permitted HERE ONLY — findings in a report genuinely are
+// an enumerated list. Don't number anything else on the page.
+interface Props { n: number; date: string; text: string; }
+const { n, date, text } = Astro.props;
+const stamp = new Date(date).toISOString().slice(0, 10);
+---
+<div class="finding">
+  <span class="n">{String(n).padStart(2, "0")}</span>
+  <div>
+    <div class="stamp">{stamp}</div>
+    <p>{text}</p>
+  </div>
+</div>
+
+<style>
+  .finding {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .n {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+    color: var(--signal);
+  }
+
+  .stamp {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+  }
+  p { max-width: var(--measure); }
+</style>

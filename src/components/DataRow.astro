@@ -1,0 +1,32 @@
+---
+// The page's signature structure, lifted from `brag spark`:
+//     label (count): ▁▂▃█
+// Reuse it for features and findings too, not just spark output.
+interface Props { label: string; count?: number; blocks?: string; }
+const { label, count, blocks } = Astro.props;
+---
+<div class="row">
+  <span class="label">{label}</span>
+  {count !== undefined && <span class="count">({count})</span>}
+  <span class="count">:</span>
+  {blocks && <span class="blocks">{blocks}</span>}
+  <slot />
+</div>
+
+<style>
+  .row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+  }
+  .label { color: var(--text); }
+  .count { color: var(--muted); }
+
+  .blocks {
+    color: var(--output);
+    letter-spacing: -0.05em;
+  }
+</style>

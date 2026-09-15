@@ -1,0 +1,27 @@
+---
+// Computed client-side so it stays true after the build.
+import { stats } from "../lib/log";
+---
+<span class="fresh" data-freshness={stats.newest ?? ""}>Last entry: &hellip;</span>
+
+<style>
+  .fresh {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+  }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>("[data-freshness]");
+  const iso = el?.dataset.freshness;
+  if (el && iso) {
+    const hours = Math.floor((Date.now() - Date.parse(iso)) / 3_600_000);
+    const label =
+      hours < 1 ? "less than an hour ago"
+      : hours < 24 ? `${hours} hour${hours === 1 ? "" : "s"} ago`
+      : `${Math.floor(hours / 24)} day${hours < 48 ? "" : "s"} ago`;
+    el.textContent = `Last entry: ${label}`;
+  }
+</script>

@@ -1,0 +1,19 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "plugins": ["stylelint-declaration-strict-value"],
+  "overrides": [
+    { "files": ["**/*.astro"], "customSyntax": "postcss-html" }
+  ],
+  "rules": {
+    "scale-unlimited/declaration-strict-value": [
+      ["/color$/", "background-color", "fill", "font-family", "font-size", "line-height"],
+      {
+        "ignoreValues": ["transparent", "inherit", "currentColor", "none", "unset"],
+        "disableFix": true,
+        "message": "Use a token from src/styles/tokens.css. Raw values are not allowed."
+      }
+    ],
+    "custom-property-pattern": null,
+    "no-descending-specificity": null
+  }
+}

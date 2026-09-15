@@ -1,0 +1,75 @@
+/* ---------------------------------------------------------------
+   The design system. Every value on this site comes from here.
+
+   stylelint is configured to reject raw colors, font families and
+   sizes anywhere else in the codebase, so an off-palette value fails
+   `npm run lint` rather than quietly shipping. If you need a value
+   that isn't here, add it here.
+
+   Full brief, voice rules and tells to avoid: DESIGN-SPEC.md
+   --------------------------------------------------------------- */
+
+:root {
+  /* Color — six values, sampled from the product's own terminal output
+     so screenshots look native to the page rather than pasted onto it. */
+  --base:   #282c34; /* page background */
+  --panel:  #1f2329; /* recessed frames, terminal containers */
+  --signal: #e04e1b; /* bridge orange, brightened to survive dark */
+  --text:   #dce1e6; /* body copy */
+  --muted:  #8a9199; /* metadata, timestamps, secondary */
+  --output: #fff; /* RESERVED: terminal output only, never page text */
+
+  /* Type — --font-sans and --font-mono are injected by Astro's Fonts API.
+     Five sizes. Do not add a sixth. */
+  --size-hero: 4rem;
+  --lh-hero: 1.05;
+  --size-head: 2rem;
+  --lh-head: 1.2;
+  --size-body: 1.0625rem;
+  --lh-body: 1.6;
+  --size-data: 0.9375rem;
+  --lh-data: 1.4;
+  --size-meta: 0.8125rem;
+  --lh-meta: 1.4;
+
+  /* Spacing — multiples of 8. Nothing else. */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+
+  /* Measure */
+  --measure: 72ch;
+  --column: 720px;
+  --column-wide: 960px;
+  --radius: 4px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background-color: var(--base);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, p { margin: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

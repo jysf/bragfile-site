@@ -1,0 +1,34 @@
+---
+// The four-field header block lifted from spark output.
+// Section metadata. Never all-caps.
+interface Props { fields: Record<string, string>; }
+const { fields } = Astro.props;
+---
+<dl>
+  {Object.entries(fields).map(([k, v]) => (
+    <div class="field">
+      <dt>{k}:</dt>
+      <dd>{v}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  dl {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+  }
+
+  .field {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text);
+  }
+</style>

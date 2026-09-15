@@ -1,0 +1,57 @@
+[
+  {
+    "id": 590,
+    "title": "Animated hero APNG and Cloudflare deploy plumbing shipped",
+    "description": "scripts/hero.mjs renders 30-frame APNG (1200x630, 2.1s loop) of real brag spark --week output with bars growing in. Replaces live TerminalFrame in hero. just hero + just deploy + just login added. site: set to bragfile.jysf.org. og.mjs schema bug (date vs created_at) also fixed.",
+    "tags": "design,hero,agent:adal,model:MiniMax-M3,session:e63ece9d-3932-41ea-af57-4f123f01b720",
+    "project": "bragfile-site",
+    "type": "shipped",
+    "impact": "Hero now ships an animated showcase image usable as both the page hero and the terminaltrove submission; deploy path is one command away.",
+    "created_at": "2026-09-15T00:09:53Z",
+    "updated_at": "2026-09-15T00:09:53Z"
+  },
+  {
+    "id": 589,
+    "title": "Session 2 copy landed across all six sections",
+    "description": "Hero uses the flight-recorder headline with real brag spark --week output. Sections 2-4 written in the brief voice (plain verbs, sentence case, no banned words). Sections 5-6 wired to live data. Replaced the stale spec numbers with a rule that numbers come from the live DB at build time.",
+    "tags": "design,hero,agent:adal,model:MiniMax-M3,session:e63ece9d-3932-41ea-af57-4f123f01b720",
+    "project": "bragfile-site",
+    "type": "shipped",
+    "impact": "Landing page now reads end-to-end with real output; the only remaining placeholder is real screenshots in sections 1 and 4.",
+    "created_at": "2026-09-14T23:40:37Z",
+    "updated_at": "2026-09-14T23:40:37Z"
+  },
+  {
+    "id": 587,
+    "title": "Chose justfile as task runner over npm scripts",
+    "description": "Cross-language, one binary, no node_modules dance. Wraps every npm script so deploy stays the only thing the user owns by hand.",
+    "tags": "design,setup,agent:adal,model:MiniMax-M3,session:e63ece9d-3932-41ea-af57-4f123f01b720",
+    "project": "bragfile-site",
+    "type": "decided",
+    "impact": "One binary now wraps every dev task; the user keeps Cloudflare deploy manual.",
+    "created_at": "2026-09-14T22:32:37Z",
+    "updated_at": "2026-09-14T22:32:37Z"
+  },
+  {
+    "id": 586,
+    "title": "lib/log.ts was reading the wrong schema and broke the log section",
+    "description": "brag export --format json now emits DEC-011 shape (created_at, description, tags as comma-joined string) but log.ts still expected the old {date, text, tags[]} shape. Page rendered with empty findings. Added a toEntry mapper in lib/log.ts; fixed the grep in export-log.sh too.",
+    "tags": "design,log,agent:adal,model:MiniMax-M3,session:e63ece9d-3932-41ea-af57-4f123f01b720",
+    "project": "bragfile-site",
+    "type": "fixed",
+    "impact": "Page now renders the recursive log section with real findings instead of empty placeholders.",
+    "created_at": "2026-09-14T22:32:37Z",
+    "updated_at": "2026-09-14T22:32:37Z"
+  },
+  {
+    "id": 583,
+    "title": "Lint was failing because .stylelintrc.json lived in a stale subdir",
+    "description": "Configs (.gitignore, .nvmrc, .stylelintrc.json, LICENSE) were trapped in bragfile-site/ from the initial scaffold. Moving them to root unblocks npm run lint and made just lint pass.",
+    "tags": "design,setup,agent:adal,model:MiniMax-M3,session:e63ece9d-3932-41ea-af57-4f123f01b720",
+    "project": "bragfile-site",
+    "type": "fixed",
+    "impact": "Unblocked the lint gate AGENTS.md requires before any session can close.",
+    "created_at": "2026-09-14T22:32:37Z",
+    "updated_at": "2026-09-14T22:32:37Z"
+  }
+]
