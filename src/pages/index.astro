@@ -11,15 +11,26 @@ import { findings, stats } from "../lib/log";
 const title = "bragfile — the flight recorder for your work";
 const description = "A local-first CLI that captures what you got done. SQLite at ~/.bragfile/db.sqlite. No cloud.";
 
-// Build stamp — read the deployed commit hash from the build environment.
-// Cloudflare Pages sets CF_PAGES_COMMIT_SHA on every build; falling back
-// to CI_COMMIT_SHA / COMMIT_SHA covers other hosts (Vercel, Netlify, GH
-// Actions). Local builds resolve to "dev" so the stamp still renders.
-const buildShaRaw =
-  process.env.CF_PAGES_COMMIT_SHA ??
-  process.env.CI_COMMIT_SHA ??
-  process.env.COMMIT_SHA ??
-  "dev";
+// Build stamp — read src/data/build.json (written by scripts/build-stamp.mjs
+// before `astro build`). Astro 7 frontmatter can't `import` JSON directly,
+// so we read+parse synchronously via fs. Falls back to "dev" when the JSON
+// is missing (e.g., `astro dev` server with no pre-build run).
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+function readBuildSha() {
+  try {
+    const raw = readFileSync(
+      resolve(process.cwd(), "src/data/build.json"),
+      "utf8",
+    );
+    const obj = JSON.parse(raw) as { sha?: string };
+    return obj.sha ?? "dev";
+  } catch {
+    return "dev";
+  }
+}
+const buildShaRaw = readBuildSha();
 const buildSha = buildShaRaw.slice(0, 7);
 const buildIsLocal = buildShaRaw === "dev";
 
