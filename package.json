@@ -7,6 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "lint": "stylelint \"src/**/*.{css,astro}\"",
+    "typecheck": "tsc -p worker/tsconfig.json",
+    "test": "node --experimental-strip-types --test tests/stats-aggregate.spec.ts",
     "log": "bash scripts/export-log.sh",
     "og": "node scripts/og.mjs"
   },
@@ -14,11 +16,14 @@
     "astro": "^7.3.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260916.1",
     "@resvg/resvg-js": "^2.6.2",
     "postcss-html": "^1.8.1",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-declaration-strict-value": "^1.12.1",
-    "upng-js": "^2.1.0"
+    "typescript": "^7.0.2",
+    "upng-js": "^2.1.0",
+    "wrangler": "^4.132.0"
   }
 }

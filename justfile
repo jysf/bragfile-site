@@ -1,6 +1,6 @@
 # bragfile-site — task runner
-# Run `just` (no args) to list recipes. Deploy to Cloudflare Pages is not
-# wrapped here — handle it manually per README.md.
+# Run `just` (no args) to list recipes. Deployment is handled by Workers
+# Builds (push to GitHub = deploy) and is not wrapped here — see README.md.
 
 # Default: list recipes
 default:
@@ -44,15 +44,10 @@ hero:
 # Refresh every artifact that depends on the log: log.json → og.png → hero.apng
 artifacts: log og hero
 
-# One-time Cloudflare auth — opens a browser. Run before `just deploy`.
+# One-time Cloudflare auth — opens a browser. Only needed for manual
+# wrangler commands (e.g. `npx wrangler kv namespace list`).
 login:
     npx wrangler login
-
-# Deploy the current build to Cloudflare Pages. The Pages project must
-# exist (create it in the dashboard first) and the custom domain
-# `bragfile.jysf.org` must be attached to the project.
-deploy:
-    npx wrangler pages deploy dist --project-name bragfile
 
 # lint + build — required by AGENTS.md before finishing a session
 check: lint build
