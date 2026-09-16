@@ -20,7 +20,8 @@
   --output: #fff; /* RESERVED: terminal output only, never page text */
 
   /* Type — --font-sans and --font-mono are injected by Astro's Fonts API.
-     Five sizes. Do not add a sixth. */
+     Five reading sizes plus two display sizes for stats panels. Do not
+     add an eighth without updating DESIGN-SPEC.md. */
   --size-hero: 4rem;
   --lh-hero: 1.05;
   --size-head: 2rem;
@@ -31,6 +32,13 @@
   --lh-data: 1.4;
   --size-meta: 0.8125rem;
   --lh-meta: 1.4;
+
+  /* Display — for stats / hero numbers. */
+  --size-display: 7rem;
+  --lh-display: 1;
+  --size-trend: 2.5rem;
+  --size-display-md: 4.5rem;
+  --size-trend-md: 1.5rem;
 
   /* Spacing — multiples of 8. Nothing else. */
   --space-1: 8px;

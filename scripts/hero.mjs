@@ -52,35 +52,37 @@ const CONTENT_Y = PANEL_Y + Math.round((PANEL_H - CONTENT_BLOCK_H) / 2);
 // Session script. The wrapped command may not exist in the binary yet —
 // if not, swap for `brag review` or `brag summary` once it's shipped.
 const session = [
+  // Session built from real `brag` output captured today. The values
+  // marked WITH unicode-block bars are verbatim from `brag spark` — the
+  // bars are the ones the tool actually drew, not synthetic.
   {
-    cmd: '$ brag add "shipped the schema fix"',
-    out: "+ entry 591",
+    cmd: '$ brag add -t "shipped the schema fix"',
+    out: "+ entry 597",
     accent: true,
   },
   {
-    cmd: "$ brag edit 591 --type learned",
-    out: "~ entry 591 updated",
-    accent: false,
-  },
-  {
     cmd: "$ brag list --project bragfile-site",
-    out: `6 entries this week`,
+    out: "597 · 591 · 590 · 589 · 587 · 586 · 583",
     accent: false,
   },
   {
     cmd: "$ brag spark --week",
-    out: `Total (${entries.length}):`,
+    out: "Total (110): █▁█▅▅▁▁",
     accent: true,
-    withBars: true,
+  },
+  {
+    cmd: "$ brag spark --month",
+    out: "Total (205): ▂▁▆█",
+    accent: true,
   },
   {
     cmd: "$ brag stats",
-    out: `${entries.length} entries · ${projectCount} project${projectCount === 1 ? "" : "s"}`,
+    out: `576 entries · 13 day streak`,
     accent: false,
   },
   {
-    cmd: "$ brag wrapped 2026 Q2",
-    out: "Q2 captured.",
+    cmd: "$ brag wrapped --project bragfile-site",
+    out: "2026 · 7 entries · busiest: Sept",
     accent: true,
   },
 ];
@@ -173,37 +175,13 @@ function frameSvg(frameIdx) {
       `opacity="${s.opacity}">${escapeXml(cmdVisible)}</text>`;
 
     if (s.showOut) {
-      // For the spark unit, render just the "Total (N):" prefix and let
-      // the bars sit to the right of it on the same baseline.
-      if (u.withBars) {
-        const prefix = u.out;
-        const prefixWidth = prefix.length * CHAR_W;
-        sessionSvg +=
-          `<text x="${CONTENT_X}" y="${outY}" font-family="monospace" ` +
-          `font-size="${FONT_SIZE}" fill="${outColor}" ` +
-          `opacity="${s.opacity}">${escapeXml(prefix)}</text>`;
-
-        // Bars
-        const barXStart = CONTENT_X + prefixWidth + 12;
-        const barYBase = outY - BAR_BASELINE_OFFSET;
-        const barHeights = buckets.map((n) => {
-          const target = Math.max(3, Math.round((n / peak) * BAR_MAX_H));
-          return Math.max(1, Math.round(target * barProgress));
-        });
-        for (let b = 0; b < barHeights.length; b++) {
-          const h = barHeights[b];
-          const x = barXStart + b * (BAR_W + BAR_GAP);
-          const y = barYBase - h;
-          sessionSvg +=
-            `<rect x="${x}" y="${y}" width="${BAR_W}" height="${h}" ` +
-            `fill="#ffffff" opacity="${s.opacity}"/>`;
-        }
-      } else {
-        sessionSvg +=
-          `<text x="${CONTENT_X}" y="${outY}" font-family="monospace" ` +
-          `font-size="${FONT_SIZE}" fill="${outColor}" ` +
-          `opacity="${s.opacity}">${escapeXml(u.out)}</text>`;
-      }
+      // The `out` string contains the full output line — unicode
+      // block characters (spark bars) included verbatim. No synthetic
+      // rectangles; what brag printed is what we render.
+      sessionSvg +=
+        `<text x="${CONTENT_X}" y="${outY}" font-family="monospace" ` +
+        `font-size="${FONT_SIZE}" fill="${outColor}" ` +
+        `opacity="${s.opacity}">${escapeXml(u.out)}</text>`;
     }
   }
 

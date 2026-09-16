@@ -16,6 +16,23 @@ const { value } = Astro.props;
     border: 0;
     border-radius: var(--radius);
     cursor: pointer;
+    transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+  }
+
+  .copy:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgb(224 78 27 / 25%);
+  }
+
+  .copy:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgb(224 78 27 / 20%);
+  }
+
+  .copy:focus-visible {
+    /* global tokens.css already handles :focus-visible; this just nudges
+       the offset so the ring sits outside the lifted shadow. */
+    outline-offset: 3px;
   }
 </style>
 
