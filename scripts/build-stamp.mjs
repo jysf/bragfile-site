@@ -9,9 +9,14 @@
 // Sources, in order:
 //  1. CF_PAGES_COMMIT_SHA env var (Cloudflare Pages sets this
 //     automatically on every production build; CF_PAGES_BRANCH also set)
-//  2. CI_COMMIT_SHA / COMMIT_SHA (other CI hosts)
-//  3. git rev-parse --short HEAD (any host with git available)
-//  4. "dev"
+//  2. WORKERS_CI_COMMIT_SHA (Cloudflare Workers Builds — this is the one
+//     that actually applies to us. Workers Builds does NOT set any
+//     CF_PAGES_* var; it sets WORKERS_CI_COMMIT_SHA / WORKERS_CI_BRANCH.
+//     Omitting it is why the footer read "build dev" in production.)
+//  3. CI_COMMIT_SHA / COMMIT_SHA (other CI hosts)
+//  4. git rev-parse --short HEAD (any host with git available AND a .git
+//     directory — the Workers Builds checkout has git but no .git)
+//  5. "dev"
 
 import { execSync } from "node:child_process";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -19,6 +24,7 @@ import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 function resolveSha() {
   const env =
     process.env.CF_PAGES_COMMIT_SHA ??
+    process.env.WORKERS_CI_COMMIT_SHA ??
     process.env.CI_COMMIT_SHA ??
     process.env.COMMIT_SHA;
   if (env && env.length >= 7) return env.slice(0, 7);
@@ -38,6 +44,7 @@ function resolveSha() {
 function resolveBranch() {
   return (
     process.env.CF_PAGES_BRANCH ??
+    process.env.WORKERS_CI_BRANCH ??
     process.env.CI_BRANCH ??
     process.env.GITHUB_REF_NAME ??
     null
