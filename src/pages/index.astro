@@ -39,12 +39,27 @@ const description = "A local-first CLI that captures what you got done. SQLite a
     </div>
   </section>
 
-  {/* 2 — PROBLEM. Panel band. Three animals depict three flavors
-       of the same blank — capybara terminal, fox review, raccoon resume. */}
+  {/* 2 — PROBLEM. Panel band. One animal for now — the raccoon. The fox and
+       capybara are parked below it, commented, until the trio comes back. */}
   <section class="band band-panel">
     <div class="column">
       <h2>You forget. The blank review form.</h2>
       <div class="forgot-grid mt-6">
+        <figure>
+          <picture>
+            <source srcset="/forgot-raccoon.webp" type="image/webp" />
+            <img
+              src="/forgot-raccoon.png"
+              alt="A raccoon software developer staring at an empty document — the resume you started from scratch for the third time"
+              loading="lazy"
+              width="1024"
+              height="1024"
+            />
+          </picture>
+          <figcaption>the resume</figcaption>
+        </figure>
+      </div>
+      {/* On hand for later — the other two flavors of the same blank:
         <figure>
           <picture>
             <source srcset="/forgot-capybara.webp" type="image/webp" />
@@ -71,20 +86,7 @@ const description = "A local-first CLI that captures what you got done. SQLite a
           </picture>
           <figcaption>the review</figcaption>
         </figure>
-        <figure>
-          <picture>
-            <source srcset="/forgot-raccoon.webp" type="image/webp" />
-            <img
-              src="/forgot-raccoon.png"
-              alt="A raccoon software developer staring at an empty document — the resume you started from scratch for the third time"
-              loading="lazy"
-              width="1024"
-              height="1024"
-            />
-          </picture>
-          <figcaption>the resume</figcaption>
-        </figure>
-      </div>
+      */}
       <p class="mt-6">You did the work. You just can't find it. bragfile records it as it happens, so future-you doesn't have to reconstruct it.</p>
     </div>
   </section>
@@ -157,21 +159,27 @@ alongside yours`}
         <div class="mt-1"><Freshness /></div>
       </div>
       <table class="log-table mt-6">
+        <colgroup>
+          <col class="col-text" />
+          <col class="col-type" />
+          <col class="col-date" />
+          <col class="col-id" />
+        </colgroup>
         <thead>
           <tr>
+            <th>text</th>
+            <th>type</th>
             <th>date</th>
             <th>id</th>
-            <th>type</th>
-            <th>text</th>
           </tr>
         </thead>
         <tbody>
           {findings.map((f) => (
             <tr>
+              <td>{f.text}</td>
+              <td>{f.type}</td>
               <td>{f.date.slice(0, 10)}</td>
               <td class="log-id">{f.id}</td>
-              <td>{f.type}</td>
-              <td>{f.text}</td>
             </tr>
           ))}
         </tbody>
@@ -179,8 +187,10 @@ alongside yours`}
     </div>
   </section>
 
-  {/* 6 — INSTALL. Signal band. The one loud moment — copy install CTA. */}
-  <section class="band band-signal">
+  {/* 6 — INSTALL. Signal band. The one loud moment — copy install CTA.
+     Tighter padding (cta class) so the page arrives at the install
+     moment instead of padding around it. */}
+  <section class="band band-signal cta">
     <div class="column">
       <h2>Nothing leaves your machine.</h2>
       <p class="mt-2">The database is a file. The export is a file. The tool is a binary.</p>
@@ -188,7 +198,7 @@ alongside yours`}
       <div class="mt-6">
         <CopyButton value="brew install jysf/tap/bragfile" inverse />
       </div>
-      <p class="mt-6">
+      <p class="cta-meta">
         <a href="https://github.com/jysf/bragfile000">github.com/jysf/bragfile000</a>
       </p>
     </div>
@@ -213,16 +223,6 @@ alongside yours`}
     line-height: var(--lh-meta);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-  }
-
-  /* Thin signal-orange underline at the bottom of the strip — the only
-     signal-orange usage on the page outside the CTA panel. */
-  .rec-strip::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: 2px;
-    background-color: var(--signal);
   }
 
   /* Pulsing dot at the strip's left edge — small, breathing, sits at the
@@ -269,6 +269,12 @@ alongside yours`}
 
   section.act {
     padding: var(--space-12) var(--space-3);
+  }
+
+  /* §6 coda — closer vertical padding so the page arrives at the
+     install moment instead of padding around it. */
+  section.cta {
+    padding: var(--space-8) var(--space-3);
   }
 
   .column {
@@ -365,12 +371,12 @@ alongside yours`}
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-6);
-    padding: var(--space-8) 0 var(--space-6);
+    padding: var(--space-6) 0 var(--space-4);
   }
 
   .stat-num {
     font-family: var(--font-sans);
-    font-size: var(--size-display);
+    font-size: var(--size-display-md);
     font-weight: 700;
     line-height: var(--lh-display);
     color: var(--text);
@@ -408,16 +414,22 @@ alongside yours`}
     letter-spacing: 0.1em;
   }
 
-  /* ===== §2 forgot-grid — three illustrations in a row, each with a
-     mono caption. ===== */
+  /* ===== §2 forgot-grid — one illustration for now. Set the column back
+     to repeat(3, 1fr) when the trio returns. ===== */
   .forgot-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: minmax(0, 400px);
     gap: var(--space-4);
   }
 
+  /* Each illustration sits on a base-colored "paper" with a hairline
+     outline, so it reads as a card integrated with the band rather than
+     pasted on. */
   .forgot-grid figure {
     margin: 0;
+    background-color: var(--base);
+    padding: var(--space-2);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 4%);
   }
 
   .forgot-grid img {
@@ -437,7 +449,7 @@ alongside yours`}
     letter-spacing: 0.04em;
   }
 
-  /* ===== §5 log table — tabular treatment replacing the Finding cards ===== */
+  /* ===== §5 log table — tabular treatment replacing the Finding cards. ===== */
   .log-table {
     width: 100%;
     border-collapse: collapse;
@@ -445,7 +457,16 @@ alongside yours`}
     font-size: var(--size-data);
     line-height: var(--lh-data);
     color: var(--text);
+
+    /* Column proportions: id (small), date (medium), type (medium),
+       text (large). Text caps at 52ch so the text column reads as a
+       measurement, not a wall. */
+    table-layout: fixed;
   }
+  .log-table col.col-id   { width: 5ch; }
+  .log-table col.col-date { width: 12ch; }
+  .log-table col.col-type { width: 12ch; }
+  .log-table col.col-text  { width: 56ch; }
 
   .log-table thead th {
     text-align: left;
@@ -455,6 +476,8 @@ alongside yours`}
     border-bottom: 1px solid var(--panel);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
   }
 
   .log-table tbody td {
@@ -463,7 +486,16 @@ alongside yours`}
     vertical-align: top;
   }
   .log-table tbody tr:last-child td { border-bottom: 0; }
-  .log-table .log-id { color: var(--muted); }
+
+  /* Right-align the trailing numeric column (id). The id is the
+     citation index — small, muted, mono, sits at the row's right edge. */
+  .log-table td.log-id,
+  .log-table th.col-id {
+    text-align: right;
+    color: var(--muted);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+  }
 
   /* ===== Utility ===== */
   .stack {
@@ -494,13 +526,24 @@ alongside yours`}
     box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
   }
 
-  /* ===== CTA link styling — base color on signal ===== */
-  .band-signal a {
-    font-family: var(--font-mono);
-    font-size: var(--size-data);
-    line-height: var(--lh-data);
-    color: var(--base);
+  /* ===== §6 CTA — install button does the loud work; the github URL is a
+     citation, demoted to muted mono so it doesn't compete. ===== */
+  .cta-meta {
+    margin-top: var(--space-4);
   }
+
+  .cta-meta a {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--base);
+    opacity: 0.6;
+    letter-spacing: 0.04em;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .cta-meta a:hover { opacity: 0.85; }
 
   @media (width <= 600px) {
     section { padding: var(--space-8) var(--space-3); }
@@ -516,9 +559,10 @@ alongside yours`}
       grid-template-columns: 1fr;
       gap: var(--space-4);
     }
-    .stat-num { font-size: var(--size-display-md); }
+    .stat-num { font-size: var(--size-trend); }
     .trend-bars { font-size: var(--size-trend-md); }
-    .forgot-grid { grid-template-columns: 1fr; }
+
+    /* .forgot-grid { grid-template-columns: 1fr; } — restore with the trio */
     .flows { flex-direction: column; }
 
     .flows-junction {
