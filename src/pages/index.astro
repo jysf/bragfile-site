@@ -11,10 +11,17 @@ import { findings, stats } from "../lib/log";
 const title = "bragfile — the flight recorder for your work";
 const description = "A local-first CLI that captures what you got done. SQLite at ~/.bragfile/db.sqlite. No cloud.";
 
-// Build stamp — Cloudflare Pages exposes CF_PAGES_COMMIT_SHA at build time.
-// Inlined here so the rendered HTML carries the deployed commit hash.
-// Falls back to "dev" when building locally (where the env var is unset).
-const buildSha = (process.env.CF_PAGES_COMMIT_SHA ?? "dev").slice(0, 7);
+// Build stamp — read the deployed commit hash from the build environment.
+// Cloudflare Pages sets CF_PAGES_COMMIT_SHA on every build; falling back
+// to CI_COMMIT_SHA / COMMIT_SHA covers other hosts (Vercel, Netlify, GH
+// Actions). Local builds resolve to "dev" so the stamp still renders.
+const buildShaRaw =
+  process.env.CF_PAGES_COMMIT_SHA ??
+  process.env.CI_COMMIT_SHA ??
+  process.env.COMMIT_SHA ??
+  "dev";
+const buildSha = buildShaRaw.slice(0, 7);
+const buildIsLocal = buildShaRaw === "dev";
 
 ---
 <Base title={title} description={description}>
@@ -190,7 +197,7 @@ alongside yours`}
       <span class="attribution-sep">·</span>
       <a href="https://github.com/jysf/bragfile000" data-track="github-footer">github</a>
     </span>
-    <span class="build-stamp" title={`deployed ${process.env.CF_PAGES_COMMIT_SHA ?? "local"}`}>build {buildSha}</span>
+    <span class="build-stamp" title={buildIsLocal ? "local build (no CF_PAGES_COMMIT_SHA env)" : `deployed ${buildShaRaw}`}>build {buildSha}</span>
   </footer>
 
 </Base>
