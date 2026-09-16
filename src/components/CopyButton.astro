@@ -1,9 +1,14 @@
 ---
 // Label says what happens. No arrow glyph.
-interface Props { value: string; }
-const { value } = Astro.props;
+// `inverse` swaps the button for use on a --signal background: dark
+// button with --signal text instead of the default --signal button.
+interface Props {
+  value: string;
+  inverse?: boolean;
+}
+const { value, inverse = false } = Astro.props;
 ---
-<button class="copy" data-value={value}>Copy install command</button>
+<button class:list={["copy", inverse && "inverse"]} data-value={value}>Copy install command</button>
 
 <style>
   .copy {
@@ -33,6 +38,21 @@ const { value } = Astro.props;
     /* global tokens.css already handles :focus-visible; this just nudges
        the offset so the ring sits outside the lifted shadow. */
     outline-offset: 3px;
+  }
+
+  /* Inverse variant: dark button for use on a --signal background.
+     White-tinted shadow on hover to keep the same lift beat. */
+  .copy.inverse {
+    background-color: var(--base);
+    color: var(--signal);
+  }
+
+  .copy.inverse:hover {
+    box-shadow: 0 4px 14px rgb(255 255 255 / 15%);
+  }
+
+  .copy.inverse:active {
+    box-shadow: 0 2px 8px rgb(255 255 255 / 10%);
   }
 </style>
 
