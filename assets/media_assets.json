@@ -3,17 +3,17 @@
     "64ce36d2": {
       "id": "64ce36d2",
       "type": "image",
-      "src": "public/forgot-raccoon.png",
+      "src": "public/forgot-capybara.png",
       "duration_s": null,
       "resolution": null,
       "provider": "nano-banana-2",
       "generation": {
-        "prompt": "Flat vector editorial illustration (no gradients, clean shapes, limited palette) of an anthropomorphic raccoon software developer sitting at a desk. The raccoon wears a hoodie, ears slightly flattened, head tilted, eyes wide with a blank confused stare at a laptop whose screen shows only a blinking cursor. On the desk: a completely empty blank form/document, a coffee mug, a couple of sticky notes with question marks. Mood: mildly defeated, comedic, relatable 'I forgot what I shipped this week'. Palette strictly: background #282C34 dark slate, desk and panels #1F2329, off-white #DCE1E6, muted grey #8A9199, and exactly one warm orange #E04E1B used as the single accent (the hoodie and mug). No text, no letters, no logos. Square composition, centered subject, generous dark negative space.",
+        "prompt": "Flat vector editorial illustration (no gradients, clean shapes, limited palette) of an anthropomorphic capybara software developer sitting calmly at a desk, staring at an empty terminal window with a single blinking cursor and one big question mark floating above their head. Small stacks of coffee cups, headphones around neck. Expression: serene but totally blank, mildly confused inward 'how did I spend this week'. Mood: comedic, deadpan, relatable developer amnesia. Palette strictly: background #282C34 dark slate, desk and panels #1F2329, off-white #DCE1E6, muted grey #8A9199, and exactly one warm orange #E04E1B as the single accent (the headphones and cursor glow). No text, no letters, no logos. Square composition, centered subject, generous dark negative space.",
         "model": "nano-banana-2",
         "n": 1,
         "google_search_grounding": false
       },
-      "created_at": "2026-09-16T00:19:33Z",
+      "created_at": "2026-09-16T00:19:50Z",
       "tags": null
     },
     "d36fa650": {
@@ -32,20 +32,20 @@
       "created_at": "2026-09-16T00:19:42Z",
       "tags": null
     },
-    "f6f1d8d5": {
-      "id": "f6f1d8d5",
+    "raccoon_v2": {
+      "id": "raccoon_v2",
       "type": "image",
-      "src": "public/forgot-capybara.png",
+      "src": "public/forgot-raccoon.png",
       "duration_s": null,
       "resolution": null,
       "provider": "nano-banana-2",
       "generation": {
-        "prompt": "Flat vector editorial illustration (no gradients, clean shapes, limited palette) of an anthropomorphic capybara software developer sitting calmly at a desk, staring at an empty terminal window with a single blinking cursor and one big question mark floating above their head. Small stacks of coffee cups, headphones around neck. Expression: serene but totally blank, mildly confused inward 'how did I spend this week'. Mood: comedic, deadpan, relatable developer amnesia. Palette strictly: background #282C34 dark slate, desk and panels #1F2329, off-white #DCE1E6, muted grey #8A9199, and exactly one warm orange #E04E1B as the single accent (the headphones and cursor glow). No text, no letters, no logos. Square composition, centered subject, generous dark negative space.",
+        "prompt": "Flat vector editorial illustration (no gradients, clean shapes, limited palette) of an anthropomorphic raccoon software developer at a desk, holding up a freshly-completed performance review form and squinting at it with frozen horrified realization — the reread moment when you notice you don't remember what you wrote. The raccoon wears a hoodie, ears slightly back, eyes narrowed at the form. Around the desk: an empty coffee mug, a worn-out pen, a few crumpled sticky notes. Mood: the horrified reread, comedic, relatable, the calm dread after the deadline rush. Palette strictly: background #282C34 dark slate, desk and panels #1F2329, off-white #DCE1E6, muted grey #8A9199, and exactly one warm orange #E04E1B as the single accent (the raccoon's hoodie drawstring and the form header bar). No text, no letters, no logos. Square composition, centered subject, generous dark negative space.",
         "model": "nano-banana-2",
         "n": 1,
         "google_search_grounding": false
       },
-      "created_at": "2026-09-16T00:19:50Z",
+      "created_at": "2026-09-16T00:24:00Z",
       "tags": null
     }
   }
