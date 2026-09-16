@@ -11,33 +11,18 @@ import { findings, stats } from "../lib/log";
 const title = "bragfile — the flight recorder for your work";
 const description = "A local-first CLI that captures what you got done. SQLite at ~/.bragfile/db.sqlite. No cloud.";
 
-// The frame labels that anchor the page as an instrument readout.
-// Each section gets one — they replace the section markers we dropped.
-const FRAME_LABELS = [
-  { n: "01", name: "HERO" },
-  { n: "02", name: "FORGET" },
-  { n: "03", name: "INPUTS" },
-  { n: "04", name: "OUTPUTS" },
-  { n: "05", name: "LOG" },
-  { n: "06", name: "INSTALL" },
-];
 ---
 <Base title={title} description={description}>
 
   <header class="rec-strip" aria-label="recording indicator">
-    <span class="rec-time">REC</span>
-    <span class="rec-sep">·</span>
+    <span class="rec-dot"></span>
     <span class="rec-word">bragfile</span>
     <span class="rec-sep">·</span>
-    <span class="rec-meta">the flight recorder for your work</span>
+    <span class="rec-time">REC</span>
   </header>
 
-  {/* 1 — HERO. Base band. Frame tag in left margin. */}
+  {/* 1 — HERO. Base band. */}
   <section class="band band-base">
-    <aside class="frame-tag" aria-hidden="true">
-      <span class="frame-dot"></span>
-      <span class="frame-label">{FRAME_LABELS[0].n}<br/>{FRAME_LABELS[0].name}</span>
-    </aside>
     <div class="column">
       <h1>The flight recorder for your work.</h1>
       <p class="lede">A local-first CLI for capturing what you got done — shipped, fixed, learned, mentored — into SQLite at <code>~/.bragfile/db.sqlite</code>. No cloud, no account, no sync.</p>
@@ -57,10 +42,6 @@ const FRAME_LABELS = [
   {/* 2 — PROBLEM. Panel band. Three animals depict three flavors
        of the same blank — capybara terminal, fox review, raccoon resume. */}
   <section class="band band-panel">
-    <aside class="frame-tag" aria-hidden="true">
-      <span class="frame-dot"></span>
-      <span class="frame-label">{FRAME_LABELS[1].n}<br/>{FRAME_LABELS[1].name}</span>
-    </aside>
     <div class="column">
       <h2>You forget. The blank review form.</h2>
       <div class="forgot-grid mt-6">
@@ -110,10 +91,6 @@ const FRAME_LABELS = [
 
   {/* 3 — INPUTS. Base band. Two flows side-by-side, same database. */}
   <section class="band band-base">
-    <aside class="frame-tag" aria-hidden="true">
-      <span class="frame-dot"></span>
-      <span class="frame-label">{FRAME_LABELS[2].n}<br/>{FRAME_LABELS[2].name}</span>
-    </aside>
     <div class="column">
       <h2>What goes in.</h2>
       <p class="mt-2">Two ways to capture. By you, or by your agent. Same database.</p>
@@ -139,13 +116,9 @@ alongside yours`}
 
   {/* 4 — OUTPUTS. Panel band. Display-scale stats panel. */}
   <section class="band band-panel">
-    <aside class="frame-tag frame-accent" aria-hidden="true">
-      <span class="frame-dot"></span>
-      <span class="frame-label">{FRAME_LABELS[3].n}<br/>{FRAME_LABELS[3].name}</span>
-    </aside>
-    <aside class="column">
+    <div class="column">
       <h2>What comes out.</h2>
-    </aside>
+    </div>
     <div class="wide">
       <div class="stats-panel mt-6">
         <div class="stats-header">
@@ -172,10 +145,6 @@ alongside yours`}
 
   {/* 5 — LOG. Base band. Act-break spacing — the recursive concept earns room. */}
   <section class="band band-base act">
-    <aside class="frame-tag" aria-hidden="true">
-      <span class="frame-dot"></span>
-      <span class="frame-label">{FRAME_LABELS[4].n}<br/>{FRAME_LABELS[4].name}</span>
-    </aside>
     <div class="column">
       <h2>The log.</h2>
       <p class="mt-2">Every step of building this page was captured by the tool the page is about. The findings below are real entries, not illustrations.</p>
@@ -212,10 +181,6 @@ alongside yours`}
 
   {/* 6 — INSTALL. Signal band. The one loud moment. */}
   <section class="band band-signal">
-    <aside class="frame-tag frame-tag-on-signal" aria-hidden="true">
-      <span class="frame-dot"></span>
-      <span class="frame-label">{FRAME_LABELS[5].n}<br/>{FRAME_LABELS[5].name}</span>
-    </aside>
     <div class="column">
       <h2>Nothing leaves your machine.</h2>
       <p class="mt-2">The database is a file. The export is a file. The tool is a binary.</p>
@@ -257,70 +222,50 @@ alongside yours`}
     background-color: var(--signal);
   }
 
-  .rec-time {
-    color: var(--text);
-    font-weight: 600;
-    letter-spacing: 0.18em;
+  /* Pulsing dot at the strip's left edge — small, breathing, sits at the
+     reading position so the strip feels alive rather than decorative. */
+  .rec-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--signal);
+    animation: rec-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes rec-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.4;
+      transform: scale(0.85);
+    }
   }
 
   .rec-word {
     color: var(--text);
     font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .rec-time {
+    color: var(--muted);
+    letter-spacing: 0.18em;
   }
   .rec-sep { opacity: 0.4; }
-
-  /* ===== Frame tag — left-margin readout marker for every section. ===== */
-  .band { position: relative; }
-
-  .frame-tag {
-    position: absolute;
-    top: var(--space-3);
-    left: var(--space-3);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-    z-index: 1;
-  }
-
-  .frame-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: var(--muted);
-  }
-
-  .frame-tag.frame-accent .frame-dot {
-    background-color: var(--signal);
-  }
-
-  .frame-tag.frame-tag-on-signal .frame-dot {
-    background-color: var(--base);
-  }
-
-  .frame-label {
-    font-family: var(--font-mono);
-    font-size: var(--size-meta);
-    line-height: var(--lh-meta);
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-
-    /* Offset label below the dot so it doesn't sit right under it. */
-    margin-top: var(--space-1);
-  }
-  .frame-tag.frame-tag-on-signal .frame-label { color: var(--base); }
 
   /* ===== Section bands — full-bleed, alternating rhythm.
      Content inside the column wraps to 720/960 columns. ===== */
   section {
-    padding: var(--space-12) var(--space-3) var(--space-12) 96px;
-
-    /* left padding 96px leaves room for the frame tag at left=24px. */
+    padding: var(--space-12) var(--space-3);
   }
 
   section.act {
-    padding: var(--space-12) var(--space-3) var(--space-12) 96px;
+    padding: var(--space-12) var(--space-3);
   }
 
   .column {
@@ -563,7 +508,6 @@ alongside yours`}
       letter-spacing: -0.02em;
     }
     .rec-strip { font-size: var(--size-meta); }
-    .frame-tag { left: var(--space-2); }
 
     .stats-grid {
       grid-template-columns: 1fr;
