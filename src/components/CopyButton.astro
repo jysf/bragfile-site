@@ -5,10 +5,13 @@
 interface Props {
   value: string;
   inverse?: boolean;
+  // data-track id for the analytics click beacon. Distinct per placement so
+  // hero vs footer conversions are separable in /stats.
+  track?: string;
 }
-const { value, inverse = false } = Astro.props;
+const { value, inverse = false, track } = Astro.props;
 ---
-<button class:list={["copy", inverse && "inverse"]} data-value={value}>Copy install command</button>
+<button class:list={["copy", inverse && "inverse"]} data-value={value} data-track={track}>Copy install command</button>
 
 <style>
   .copy {

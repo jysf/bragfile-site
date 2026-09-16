@@ -23,6 +23,47 @@ const ogImage = new URL("/og.png", Astro.site).href;
     <meta property="og:image" content={ogImage} />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    {/* First-party analytics beacon. Ported from jy7y (spec: docs/specs/analytics.md there). Prod only. */}
+    {import.meta.env.PROD && (
+      <script is:inline>
+        (function () {
+          var send = function (payload) {
+            try {
+              var body = JSON.stringify(payload);
+              if (navigator.sendBeacon) {
+                navigator.sendBeacon('/api/track', body);
+              } else {
+                fetch('/api/track', { method: 'POST', body: body, keepalive: true });
+              }
+            } catch (e) { /* swallow */ }
+          };
+
+          // pageview on load, captures ?source= or ?utm_source= if present
+          var params = new URLSearchParams(location.search);
+          var source = params.get('source') || params.get('utm_source') || undefined;
+          var medium = params.get('utm_medium') || undefined;
+          send({
+            type: 'pageview',
+            path: location.pathname,
+            referrer: document.referrer || undefined,
+            source: source,
+            medium: medium,
+          });
+
+          // click on anything with [data-track]
+          document.addEventListener('click', function (e) {
+            var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
+            if (!el) return;
+            send({
+              type: 'click',
+              path: location.pathname,
+              target: el.getAttribute('data-track'),
+            });
+          });
+        })();
+      </script>
+    )}
   </head>
   <body>
     <main><slot /></main>

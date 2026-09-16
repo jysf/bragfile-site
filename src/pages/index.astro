@@ -11,6 +11,11 @@ import { findings, stats } from "../lib/log";
 const title = "bragfile — the flight recorder for your work";
 const description = "A local-first CLI that captures what you got done. SQLite at ~/.bragfile/db.sqlite. No cloud.";
 
+// Build stamp — Cloudflare Pages exposes CF_PAGES_COMMIT_SHA at build time.
+// Inlined here so the rendered HTML carries the deployed commit hash.
+// Falls back to "dev" when building locally (where the env var is unset).
+const buildSha = (process.env.CF_PAGES_COMMIT_SHA ?? "dev").slice(0, 7);
+
 ---
 <Base title={title} description={description}>
 
@@ -26,7 +31,7 @@ const description = "A local-first CLI that captures what you got done. SQLite a
     <div class="column">
       <h1>The flight recorder for your work.</h1>
       <p class="lede">A local-first CLI for capturing what you got done — shipped, fixed, learned, mentored — into SQLite at <code>~/.bragfile/db.sqlite</code>. No cloud, no account, no sync.</p>
-      <div class="mt-6"><CopyButton value="brew install jysf/tap/bragfile" /></div>
+      <div class="mt-6"><CopyButton value="brew install jysf/tap/bragfile" track="copy-install-hero" /></div>
     </div>
     <div class="wide">
       <img
@@ -167,10 +172,10 @@ alongside yours`}
       <p class="mt-2">The database is a file. The export is a file. The tool is a binary.</p>
       <p class="mt-2">Capture what happened. Find it when it counts.</p>
       <div class="mt-6">
-        <CopyButton value="brew install jysf/tap/bragfile" inverse />
+        <CopyButton value="brew install jysf/tap/bragfile" inverse track="copy-install-footer" />
       </div>
       <p class="cta-meta">
-        <a href="https://github.com/jysf/bragfile000">github.com/jysf/bragfile000</a>
+        <a href="https://github.com/jysf/bragfile000" data-track="github-cta">github.com/jysf/bragfile000</a>
       </p>
     </div>
   </section>
@@ -178,11 +183,14 @@ alongside yours`}
   {/* Attribution — sits below the CTA panel on --base, outside the
        band's signal. Quiet mono line, two reference URLs. */}
   <footer class="attribution">
-    <span>made by jysf</span>
-    <span class="attribution-sep">·</span>
-    <a href="https://jysf.org/?source=bragfile">jysf.org</a>
-    <span class="attribution-sep">·</span>
-    <a href="https://github.com/jysf/bragfile000">github</a>
+    <span class="attribution-line">
+      <span>made by jysf</span>
+      <span class="attribution-sep">·</span>
+      <a href="https://jysf.org/?source=bragfile" data-track="jysf-org-footer">jysf.org</a>
+      <span class="attribution-sep">·</span>
+      <a href="https://github.com/jysf/bragfile000" data-track="github-footer">github</a>
+    </span>
+    <span class="build-stamp" title={`deployed ${process.env.CF_PAGES_COMMIT_SHA ?? "local"}`}>build {buildSha}</span>
   </footer>
 
 </Base>
@@ -523,16 +531,24 @@ alongside yours`}
   /* ===== Attribution — quiet mono line below the CTA on --base. ===== */
   .attribution {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--space-2);
+    gap: var(--space-3);
     padding: var(--space-8) var(--space-3);
     background-color: var(--base);
     font-family: var(--font-mono);
     font-size: var(--size-meta);
     line-height: var(--lh-meta);
     color: var(--muted);
+  }
+
+  .attribution-line {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .attribution a {
@@ -543,6 +559,16 @@ alongside yours`}
   }
   .attribution a:hover { color: var(--text); }
   .attribution-sep { opacity: 0.4; }
+
+  /* Build stamp — sits at the bottom-right of the attribution row.
+     Hover reveals the full SHA via title attribute. */
+  .build-stamp {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    color: var(--muted);
+    opacity: 0.6;
+    letter-spacing: 0.06em;
+  }
 
   @media (width <= 600px) {
     section { padding: var(--space-8) var(--space-3); }

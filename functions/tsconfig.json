@@ -1,0 +1,20 @@
+{
+  "// note": "Standalone on purpose. The root tsconfig extends astro's base, which pulls in DOM lib types that collide with the Workers runtime's own Request/Response/Headers. functions/ runs on workerd, not in a browser, so it gets its own config.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["**/*.ts"]
+}
