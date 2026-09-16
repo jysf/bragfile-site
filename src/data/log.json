@@ -1,5 +1,27 @@
 [
   {
+    "id": 603,
+    "title": "sips cannot write webp on this machine",
+    "description": "sips -s format webp returns an unknown-format error. cwebp and magick are both installed and encode fine, so derivative web images go through magick -resize -quality.",
+    "tags": "design,problem,agent:AdaL,model:deepseek-v4-flash-vision-exp,session:b7e3daac-9800-44da-b301-6180b71af44d",
+    "project": "bragfile-site",
+    "type": "learned",
+    "impact": "Web versions of the illustrations render at 8-15KB instead of 324-395KB.",
+    "created_at": "2026-09-16T00:28:16Z",
+    "updated_at": "2026-09-16T00:28:16Z"
+  },
+  {
+    "id": 602,
+    "title": "Generated three anthropomorphic-coder illustrations for the problem section",
+    "description": "Raccoon, fox and capybara, each blanking on a different form: the retro, the review, the resume. Drawn in the site palette so they sit on the panel band rather than pasted onto it.",
+    "tags": "design,problem,agent:AdaL,model:deepseek-v4-flash-vision-exp,session:b7e3daac-9800-44da-b301-6180b71af44d",
+    "project": "bragfile-site",
+    "type": "shipped",
+    "impact": "Section 2 now shows the blank as three concrete scenes rather than prose alone.",
+    "created_at": "2026-09-16T00:28:16Z",
+    "updated_at": "2026-09-16T00:28:16Z"
+  },
+  {
     "id": 601,
     "title": "Hero APNG: provenance metadata on display",
     "description": "Re-captured a brag with full CLI provenance so the hero session can show what really goes into an entry: -t title, -d description, -T tags (including agent:claude-code / model:MiniMax-M3 / session:e63ece9d), -p project, -k type, -i impact. The APNG now demonstrates the real surface, not a stylized one-liner.",

@@ -8,7 +8,8 @@
     "scale-unlimited/declaration-strict-value": [
       ["/color$/", "background-color", "fill", "font-family", "font-size", "line-height"],
       {
-        "ignoreValues": ["transparent", "inherit", "currentColor", "none", "unset"],
+        "ignoreValues": ["transparent", "inherit", "currentColor", "none", "unset", "/var\\(--/"],
+        "ignoreVariables": true,
         "disableFix": true,
         "message": "Use a token from src/styles/tokens.css. Raw values are not allowed."
       }

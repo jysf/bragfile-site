@@ -10,19 +10,34 @@ import { findings, stats } from "../lib/log";
 
 const title = "bragfile — the flight recorder for your work";
 const description = "A local-first CLI that captures what you got done. SQLite at ~/.bragfile/db.sqlite. No cloud.";
+
+// The frame labels that anchor the page as an instrument readout.
+// Each section gets one — they replace the section markers we dropped.
+const FRAME_LABELS = [
+  { n: "01", name: "HERO" },
+  { n: "02", name: "FORGET" },
+  { n: "03", name: "INPUTS" },
+  { n: "04", name: "OUTPUTS" },
+  { n: "05", name: "LOG" },
+  { n: "06", name: "INSTALL" },
+];
 ---
 <Base title={title} description={description}>
 
-  <header class="page-header">
-    <span class="wordmark">bragfile</span>
-    <span class="indicator" aria-label="recording">
-      <span class="rec-dot"></span>
-      <span>REC</span>
-    </span>
+  <header class="rec-strip" aria-label="recording indicator">
+    <span class="rec-time">REC</span>
+    <span class="rec-sep">·</span>
+    <span class="rec-word">bragfile</span>
+    <span class="rec-sep">·</span>
+    <span class="rec-meta">the flight recorder for your work</span>
   </header>
 
-  {/* 1 — HERO. Base band. */}
+  {/* 1 — HERO. Base band. Frame tag in left margin. */}
   <section class="band band-base">
+    <aside class="frame-tag" aria-hidden="true">
+      <span class="frame-dot"></span>
+      <span class="frame-label">{FRAME_LABELS[0].n}<br/>{FRAME_LABELS[0].name}</span>
+    </aside>
     <div class="column">
       <h1>The flight recorder for your work.</h1>
       <p class="lede">A local-first CLI for capturing what you got done — shipped, fixed, learned, mentored — into SQLite at <code>~/.bragfile/db.sqlite</code>. No cloud, no account, no sync.</p>
@@ -39,41 +54,53 @@ const description = "A local-first CLI that captures what you got done. SQLite a
     </div>
   </section>
 
-  {/* 2 — PROBLEM. Panel band. The three animals depict three flavors
-       of the same blank — capybara terminal, fox review, raccoon resume.
-       Heading is the universal statement; the trio is the breakdown. */}
+  {/* 2 — PROBLEM. Panel band. Three animals depict three flavors
+       of the same blank — capybara terminal, fox review, raccoon resume. */}
   <section class="band band-panel">
+    <aside class="frame-tag" aria-hidden="true">
+      <span class="frame-dot"></span>
+      <span class="frame-label">{FRAME_LABELS[1].n}<br/>{FRAME_LABELS[1].name}</span>
+    </aside>
     <div class="column">
       <h2>You forget. The blank review form.</h2>
       <div class="forgot-grid mt-6">
         <figure>
-          <img
-            src="/forgot-capybara.webp"
-            alt="A capybara software developer staring blankly at a terminal with a blinking cursor — the retro where you can't remember what you shipped"
-            loading="lazy"
-            width="1024"
-            height="1024"
-          />
+          <picture>
+            <source srcset="/forgot-capybara.webp" type="image/webp" />
+            <img
+              src="/forgot-capybara.png"
+              alt="A capybara software developer staring blankly at a terminal with a blinking cursor — the retro where you can't remember what you shipped"
+              loading="lazy"
+              width="1024"
+              height="1024"
+            />
+          </picture>
           <figcaption>the retro</figcaption>
         </figure>
         <figure>
-          <img
-            src="/forgot-fox.webp"
-            alt="A fox software developer hovering a pen over a blank performance review form — the review where you can't fill it in"
-            loading="lazy"
-            width="1024"
-            height="1024"
-          />
+          <picture>
+            <source srcset="/forgot-fox.webp" type="image/webp" />
+            <img
+              src="/forgot-fox.png"
+              alt="A fox software developer hovering a pen over a blank performance review form — the review where you can't fill it in"
+              loading="lazy"
+              width="1024"
+              height="1024"
+            />
+          </picture>
           <figcaption>the review</figcaption>
         </figure>
         <figure>
-          <img
-            src="/forgot-raccoon.webp"
-            alt="A raccoon software developer staring at an empty document — the resume you started from scratch for the third time"
-            loading="lazy"
-            width="1024"
-            height="1024"
-          />
+          <picture>
+            <source srcset="/forgot-raccoon.webp" type="image/webp" />
+            <img
+              src="/forgot-raccoon.png"
+              alt="A raccoon software developer staring at an empty document — the resume you started from scratch for the third time"
+              loading="lazy"
+              width="1024"
+              height="1024"
+            />
+          </picture>
           <figcaption>the resume</figcaption>
         </figure>
       </div>
@@ -81,15 +108,25 @@ const description = "A local-first CLI that captures what you got done. SQLite a
     </div>
   </section>
 
-  {/* 3 — INPUTS. Base band. Two flows: by hand, by MCP. */}
+  {/* 3 — INPUTS. Base band. Two flows side-by-side, same database. */}
   <section class="band band-base">
+    <aside class="frame-tag" aria-hidden="true">
+      <span class="frame-dot"></span>
+      <span class="frame-label">{FRAME_LABELS[2].n}<br/>{FRAME_LABELS[2].name}</span>
+    </aside>
     <div class="column">
       <h2>What goes in.</h2>
       <p class="mt-2">Two ways to capture. By you, or by your agent. Same database.</p>
+    </div>
+    <div class="wide">
       <div class="flows mt-6">
         <TerminalFrame command='brag add "shipped the schema fix"'>
 {`+ entry 591`}
         </TerminalFrame>
+        <div class="flows-junction" aria-hidden="true">
+          <span class="flows-junction-line"></span>
+          <span class="flows-junction-label mono">sqlite</span>
+        </div>
         <TerminalFrame command="brag mcp install">
 {`✓ connected
 claude-code · claude-desktop · cursor
@@ -102,9 +139,13 @@ alongside yours`}
 
   {/* 4 — OUTPUTS. Panel band. Display-scale stats panel. */}
   <section class="band band-panel">
-    <div class="column">
+    <aside class="frame-tag frame-accent" aria-hidden="true">
+      <span class="frame-dot"></span>
+      <span class="frame-label">{FRAME_LABELS[3].n}<br/>{FRAME_LABELS[3].name}</span>
+    </aside>
+    <aside class="column">
       <h2>What comes out.</h2>
-    </div>
+    </aside>
     <div class="wide">
       <div class="stats-panel mt-6">
         <div class="stats-header">
@@ -131,6 +172,10 @@ alongside yours`}
 
   {/* 5 — LOG. Base band. Act-break spacing — the recursive concept earns room. */}
   <section class="band band-base act">
+    <aside class="frame-tag" aria-hidden="true">
+      <span class="frame-dot"></span>
+      <span class="frame-label">{FRAME_LABELS[4].n}<br/>{FRAME_LABELS[4].name}</span>
+    </aside>
     <div class="column">
       <h2>The log.</h2>
       <p class="mt-2">Every step of building this page was captured by the tool the page is about. The findings below are real entries, not illustrations.</p>
@@ -142,14 +187,35 @@ alongside yours`}
         }} />
         <div class="mt-1"><Freshness /></div>
       </div>
-      <div class="stack mt-6">
-        {findings.map((f, i) => <Finding n={i + 1} date={f.date} text={f.text} />)}
-      </div>
+      <table class="log-table mt-6">
+        <thead>
+          <tr>
+            <th>date</th>
+            <th>id</th>
+            <th>type</th>
+            <th>text</th>
+          </tr>
+        </thead>
+        <tbody>
+          {findings.map((f) => (
+            <tr>
+              <td>{f.date.slice(0, 10)}</td>
+              <td class="log-id">{f.id}</td>
+              <td>{f.type}</td>
+              <td>{f.text}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </section>
 
   {/* 6 — INSTALL. Signal band. The one loud moment. */}
   <section class="band band-signal">
+    <aside class="frame-tag frame-tag-on-signal" aria-hidden="true">
+      <span class="frame-dot"></span>
+      <span class="frame-label">{FRAME_LABELS[5].n}<br/>{FRAME_LABELS[5].name}</span>
+    </aside>
     <div class="column">
       <h2>Nothing leaves your machine.</h2>
       <p class="mt-2">The database is a file. The export is a file. The tool is a binary.</p>
@@ -163,21 +229,101 @@ alongside yours`}
 </Base>
 
 <style>
-  /* ===== Section bands — full-bleed backgrounds, alternate for rhythm =====
-     Sections are full-width so their background color fills the viewport.
-     .column / .wide constrain the content INSIDE the section to design widths. */
-  section {
-    padding: var(--space-6) var(--space-3);
+  /* ===== Top recording strip — replaces the panel page-header. ===== */
+  .rec-strip {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-3);
+    height: 40px;
+    padding: 0 var(--space-3);
+    background-color: var(--panel);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* Thin signal-orange underline at the bottom of the strip — the only
+     signal-orange usage on the page outside the CTA panel. */
+  .rec-strip::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background-color: var(--signal);
+  }
+
+  .rec-time {
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+  }
+
+  .rec-word {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .rec-sep { opacity: 0.4; }
+
+  /* ===== Frame tag — left-margin readout marker for every section. ===== */
+  .band { position: relative; }
+
+  .frame-tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    z-index: 1;
+  }
+
+  .frame-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--muted);
+  }
+
+  .frame-tag.frame-accent .frame-dot {
+    background-color: var(--signal);
+  }
+
+  .frame-tag.frame-tag-on-signal .frame-dot {
+    background-color: var(--base);
+  }
+
+  .frame-label {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    /* Offset label below the dot so it doesn't sit right under it. */
+    margin-top: var(--space-1);
+  }
+  .frame-tag.frame-tag-on-signal .frame-label { color: var(--base); }
+
+  /* ===== Section bands — full-bleed, alternating rhythm.
+     Content inside the column wraps to 720/960 columns. ===== */
+  section {
+    padding: var(--space-12) var(--space-3) var(--space-12) 96px;
+
+    /* left padding 96px leaves room for the frame tag at left=24px. */
   }
 
   section.act {
-    /* Act break — breathing room before the recursive concept. */
-    padding: var(--space-12) var(--space-3);
+    padding: var(--space-12) var(--space-3) var(--space-12) 96px;
   }
 
   .column {
-    position: relative;
     max-width: var(--column);
   }
 
@@ -192,53 +338,7 @@ alongside yours`}
     background-color: var(--signal);
     color: var(--base);
   }
-
-  /* ===== Page header — wordmark + REC indicator ===== */
-  .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: var(--column);
-    padding: var(--space-4) var(--space-3) 0;
-    font-family: var(--font-mono);
-    font-size: var(--size-meta);
-    line-height: var(--lh-meta);
-    color: var(--muted);
-  }
-
-  .page-header .wordmark {
-    color: var(--text);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-
-  .page-header .indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    color: var(--muted);
-  }
-
-  .rec-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background-color: var(--signal);
-    border-radius: 50%;
-    animation: rec-pulse 1.6s ease-in-out infinite;
-  }
-
-  @keyframes rec-pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    50% {
-      opacity: 0.35;
-      transform: scale(0.8);
-    }
-  }
+  .band-signal h2 { color: inherit; }
 
   /* ===== Typography ===== */
   h1 {
@@ -259,12 +359,38 @@ alongside yours`}
   p { max-width: var(--measure); }
   .lede { margin-top: var(--space-3); }
 
-  /* ===== Flow stack — two terminal frames in section 3 ===== */
+  /* ===== Flow row (section 3) — two terminal frames side by side with a
+     center connector that names the database they both write to. ===== */
   .flows {
     display: flex;
-    flex-direction: column;
+    align-items: stretch;
     gap: var(--space-3);
     max-width: var(--column-wide);
+  }
+
+  .flows-junction {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-1);
+    min-width: 96px;
+  }
+
+  .flows-junction-line {
+    flex: 1;
+    width: 1px;
+    background-color: var(--muted);
+    min-height: 32px;
+  }
+
+  .flows-junction-label {
+    font-size: var(--size-meta);
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   /* ===== Stats panel — section 4's display-scale numbers ===== */
@@ -334,62 +460,8 @@ alongside yours`}
     letter-spacing: 0.1em;
   }
 
-  /* ===== Utility ===== */
-  .stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-  .mt-1 { margin-top: var(--space-1); }
-  .mt-2 { margin-top: var(--space-2); }
-  .mt-3 { margin-top: var(--space-3); }
-  .mt-6 { margin-top: var(--space-6); }
-  .mono { font-family: var(--font-mono); }
-
-  /* ===== Inline code ===== */
-  code {
-    font-family: var(--font-mono);
-    font-size: var(--size-data);
-    line-height: var(--lh-data);
-    color: var(--text);
-  }
-
-  /* ===== Section 3 — numbered command list (legacy of earlier design) ===== */
-  .cmds {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    list-style: decimal inside;
-    padding: 0;
-    margin: 0;
-    font-size: var(--size-body);
-    line-height: var(--lh-body);
-    color: var(--text);
-  }
-
-  .cmds code {
-    color: var(--signal);
-  }
-
-  /* ===== Hero image — full-width inside the wide frame ===== */
-  .hero-img {
-    display: block;
-    width: 100%;
-    height: auto;
-    background-color: var(--panel);
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
-  }
-
-  /* ===== CTA section — link styling ===== */
-  .band-signal a {
-    font-family: var(--font-mono);
-    font-size: var(--size-data);
-    line-height: var(--lh-data);
-    color: var(--base);
-  }
-
   /* ===== §2 forgot-grid — three illustrations in a row, each with a
-     mono caption. Captions match the section's three flavors. ===== */
+     mono caption. ===== */
   .forgot-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -417,15 +489,81 @@ alongside yours`}
     letter-spacing: 0.04em;
   }
 
+  /* ===== §5 log table — tabular treatment replacing the Finding cards ===== */
+  .log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+    color: var(--text);
+  }
+
+  .log-table thead th {
+    text-align: left;
+    font-weight: 400;
+    color: var(--muted);
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--panel);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .log-table tbody td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--panel);
+    vertical-align: top;
+  }
+  .log-table tbody tr:last-child td { border-bottom: 0; }
+  .log-table .log-id { color: var(--muted); }
+
+  /* ===== Utility ===== */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .mt-1 { margin-top: var(--space-1); }
+  .mt-2 { margin-top: var(--space-2); }
+  .mt-3 { margin-top: var(--space-3); }
+  .mt-6 { margin-top: var(--space-6); }
+  .mono { font-family: var(--font-mono); }
+
+  /* ===== Inline code ===== */
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+    color: var(--text);
+  }
+
+  /* ===== Hero image — instrument bezel hairline ===== */
+  .hero-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: var(--panel);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
+  }
+
+  /* ===== CTA link styling — base color on signal ===== */
+  .band-signal a {
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+    color: var(--base);
+  }
+
   @media (width <= 600px) {
-    section { padding: var(--space-4) var(--space-2); }
-    section.act { padding: var(--space-8) var(--space-2); }
+    section { padding: var(--space-8) var(--space-3); }
+    section.act { padding: var(--space-8) var(--space-3); }
 
     h1 {
       font-size: var(--size-head);
       letter-spacing: -0.02em;
     }
-    .page-header .indicator { display: none; }
+    .rec-strip { font-size: var(--size-meta); }
+    .frame-tag { left: var(--space-2); }
 
     .stats-grid {
       grid-template-columns: 1fr;
@@ -434,5 +572,20 @@ alongside yours`}
     .stat-num { font-size: var(--size-display-md); }
     .trend-bars { font-size: var(--size-trend-md); }
     .forgot-grid { grid-template-columns: 1fr; }
+    .flows { flex-direction: column; }
+
+    .flows-junction {
+      flex-direction: row;
+      min-width: 0;
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .flows-junction-line {
+      width: auto;
+      height: 1px;
+      min-width: 32px;
+      min-height: 0;
+    }
+    .log-table { font-size: var(--size-meta); }
   }
 </style>
