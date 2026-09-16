@@ -4,8 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/build-stamp.mjs && astro build",
-    "build:stamp": "node scripts/build-stamp.mjs",
+    "build": "astro build",
     "preview": "astro preview",
     "lint": "stylelint \"src/**/*.{css,astro}\"",
     "log": "bash scripts/export-log.sh",

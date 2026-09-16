@@ -32,7 +32,7 @@ function pv(daysAgo: number, path = '/', visitor = 'v1'): Event {
   return { ts: NOW - daysAgo * DAY_MS, type: 'pageview', path, visitor };
 }
 
-test.describe('selectLegacyKeys', () => {
+
   // KV lists lexicographically and the keys are timestamp-prefixed, so the
   // listing arrives oldest-first. Taking the head spent the whole budget on
   // ~90-day-old events, outside every window the page renders. Page came back
@@ -86,7 +86,7 @@ test.describe('selectLegacyKeys', () => {
   });
 });
 
-test.describe('computeStats', () => {
+
   // The 30-day series was fed pageviews7.concat(last30d pageviews), but
   // last30d already contains those 7 days, so every recent day counted twice
   // and the peak was inflated. Shipped, fixed in #55.
@@ -132,7 +132,7 @@ test.describe('computeStats', () => {
   });
 });
 
-test.describe('helpers', () => {
+
   test('withinDays is inclusive of the cutoff boundary', () => {
     const onBoundary = { ts: NOW - 7 * DAY_MS, type: 'pageview', path: '/' } as Event;
     expect(withinDays([onBoundary], 7, NOW)).toHaveLength(1);
@@ -170,7 +170,7 @@ test.describe('helpers', () => {
   });
 });
 
-test.describe('fitMetadata', () => {
+
   test('leaves a normal event untouched', () => {
     const entry = { ts: NOW, type: 'pageview', path: '/about', visitor: 'abc123' };
     expect(fitMetadata(entry)).toEqual(entry);

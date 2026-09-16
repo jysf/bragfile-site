@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
+import buildStamp from "./scripts/build-stamp.mjs";
 
 export default defineConfig({
   site: "https://bragfile.jysf.org",
@@ -24,4 +25,8 @@ export default defineConfig({
       styles: ["normal"],
     },
   ],
+
+  vite: {
+    plugins: [buildStamp()],
+  },
 });
