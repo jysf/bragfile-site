@@ -11,26 +11,20 @@ import { findings, stats } from "../lib/log";
 const title = "bragfile — the flight recorder for your work";
 const description = "A local-first CLI that captures what you got done. SQLite at ~/.bragfile/db.sqlite. No cloud.";
 
-// Build stamp — read src/data/build.json (written by scripts/build-stamp.mjs
-// before `astro build`). Astro 7 frontmatter can't `import` JSON directly,
-// so we read+parse synchronously via fs. Falls back to "dev" when the JSON
-// is missing (e.g., `astro dev` server with no pre-build run).
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+// Build stamp — src/data/build.json is written by the build-stamp Vite
+// plugin (enforce: "pre", buildStart), so it is fresh on disk before this
+// module is transformed.
+//
+// This is an `import`, not a readFileSync, on purpose. Vite inlines the
+// JSON into the bundle at build time, so it needs no filesystem and no
+// process.cwd() when the route is rendered. The previous fs-based read
+// worked locally but returned "dev" in production: `wrangler deploy` finds
+// no wrangler config, runs `astro add cloudflare`, and rebuilds with the
+// adapter — and under that adapter the node:fs read failed and the catch
+// swallowed it. See 46de25d.
+import buildData from "../data/build.json";
 
-function readBuildSha() {
-  try {
-    const raw = readFileSync(
-      resolve(process.cwd(), "src/data/build.json"),
-      "utf8",
-    );
-    const obj = JSON.parse(raw) as { sha?: string };
-    return obj.sha ?? "dev";
-  } catch {
-    return "dev";
-  }
-}
-const buildShaRaw = readBuildSha();
+const buildShaRaw = (buildData as { sha?: string }).sha ?? "dev";
 const buildSha = buildShaRaw.slice(0, 7);
 const buildIsLocal = buildShaRaw === "dev";
 
