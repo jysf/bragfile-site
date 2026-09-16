@@ -39,53 +39,25 @@ const description = "A local-first CLI that captures what you got done. SQLite a
     </div>
   </section>
 
-  {/* 2 — PROBLEM. Panel band. Three stages of completing a review
-       form: drafting at the terminal, freezing on a blank line,
-       rereading what you wrote. */}
+  {/* 2 — PROBLEM. Panel band. Single illustration: the raccoon at the
+       laptop, blank form on the desk. */}
   <section class="band band-panel">
     <div class="column">
       <h2>You forget. The blank review form.</h2>
-      <div class="forgot-grid mt-6">
-        <figure>
-          <picture>
-            <source srcset="/forgot-capybara.webp" type="image/webp" />
-            <img
-              src="/forgot-capybara.png"
-              alt="A capybara software developer staring blankly at a terminal with a blinking cursor — the draft before the form"
-              loading="lazy"
-              width="1024"
-              height="1024"
-            />
-          </picture>
-          <figcaption>the draft</figcaption>
-        </figure>
-        <figure>
-          <picture>
-            <source srcset="/forgot-fox.webp" type="image/webp" />
-            <img
-              src="/forgot-fox.png"
-              alt="A fox software developer hovering a pen over a blank performance review form — frozen on the next line"
-              loading="lazy"
-              width="1024"
-              height="1024"
-            />
-          </picture>
-          <figcaption>the line</figcaption>
-        </figure>
-        <figure>
-          <picture>
-            <source srcset="/forgot-raccoon.webp" type="image/webp" />
-            <img
-              src="/forgot-raccoon.png"
-              alt="A raccoon software developer squinting at a freshly-completed performance review form — the reread after submission"
-              loading="lazy"
-              width="1024"
-              height="1024"
-            />
-          </picture>
-          <figcaption>the reread</figcaption>
-        </figure>
-      </div>
+      <p class="mt-2">The retro where you can't remember what you shipped. The review form you stare at for an hour. The resume you started from scratch for the third time.</p>
+      <figure class="forgot-figure mt-6">
+        <picture>
+          <source srcset="/forgot-raccoon.webp" type="image/webp" />
+          <img
+            src="/forgot-raccoon.png"
+            alt="An anthropomorphic raccoon software developer at a desk, staring blankly at a laptop while a blank form and question-marked sticky notes sit beside an untouched coffee mug. Mood: mildly defeated, 'I forgot what I shipped this week'."
+            loading="lazy"
+            width="1024"
+            height="1024"
+          />
+        </picture>
+        <figcaption>the blank page</figcaption>
+      </figure>
       <p class="mt-6">You did the work. You just can't find it. bragfile records it as it happens, so future-you doesn't have to reconstruct it.</p>
     </div>
   </section>
@@ -423,32 +395,25 @@ alongside yours`}
     letter-spacing: 0.1em;
   }
 
-  /* ===== §2 forgot-grid — one illustration for now. Set the column back
-     to repeat(3, 1fr) when the trio returns. ===== */
-  .forgot-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 400px);
-    gap: var(--space-4);
-  }
-
-  /* Each illustration sits on a base-colored "paper" with a hairline
-     outline, so it reads as a card integrated with the band rather than
-     pasted on. */
-  .forgot-grid figure {
+  /* §2 single illustration — sits on a base-colored "paper" with a
+     hairline outline, capped at column-wide so it reads as one composed
+     image rather than a wall. */
+  .forgot-figure {
     margin: 0;
+    max-width: var(--column-wide);
     background-color: var(--base);
     padding: var(--space-2);
     box-shadow: 0 0 0 1px rgb(255 255 255 / 4%);
   }
 
-  .forgot-grid img {
+  .forgot-figure img {
     display: block;
     width: 100%;
     height: auto;
     background-color: var(--base);
   }
 
-  .forgot-grid figcaption {
+  .forgot-figure figcaption {
     font-family: var(--font-mono);
     font-size: var(--size-meta);
     line-height: var(--lh-meta);
@@ -595,7 +560,6 @@ alongside yours`}
     .stat-num { font-size: var(--size-trend); }
     .trend-bars { font-size: var(--size-trend-md); }
 
-    /* .forgot-grid { grid-template-columns: 1fr; } — restore with the trio */
     .flows { flex-direction: column; }
 
     .flows-junction {
