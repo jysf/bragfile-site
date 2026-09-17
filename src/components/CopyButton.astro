@@ -65,9 +65,6 @@ const { value, inverse = false, track } = Astro.props;
       await navigator.clipboard.writeText(btn.dataset.value ?? "");
       const original = btn.textContent;
       btn.textContent = "Copied";
-      // The conversion event that actually matters. Pageviews tell you the
-      // social post worked; this tells you the page worked.
-      (window as any).cfBeacon?.track?.("install_copy");
       setTimeout(() => { btn.textContent = original; }, 2000);
     });
   });
