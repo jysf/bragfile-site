@@ -36,7 +36,14 @@ export default {
       });
     }
 
-    // Fall through to static assets (configured via the assets binding).
-    return env.ASSETS.fetch(request);
+    // Fall through to static assets. If nothing matches (unknown path),
+    // redirect to the home page — this site is one page, so a 404 page adds
+    // nothing. /404.html (the asset server's not-found response) also goes
+    // home rather than rendering a second page.
+    const assetRes = await env.ASSETS.fetch(request);
+    if (assetRes.status === 404) {
+      return Response.redirect(new URL('/', url).toString(), 302);
+    }
+    return assetRes;
   },
 };
