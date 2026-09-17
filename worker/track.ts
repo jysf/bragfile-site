@@ -1,7 +1,7 @@
-import { fitMetadata } from '../stats/aggregate';
+import { fitMetadata } from './aggregate';
+import type { Env } from './env';
 
 // Ingest endpoint for first-party analytics.
-// Spec: docs/specs/analytics.md
 //
 // Receives a JSON body from the in-page beacon and writes one event to KV.
 // Privacy: no IP stored, no full UA stored, coarse UA family only, 90-day TTL.
@@ -9,16 +9,7 @@ import { fitMetadata } from '../stats/aggregate';
 // Notes:
 //   - KV write is fired via ctx.waitUntil so the beacon response returns
 //     immediately (204), keeping the client-side beacon cheap.
-//   - We don't destructure ctx — we need ctx.waitUntil and ctx.env both.
-
-interface Env {
-  STATS: KVNamespace;
-  // Optional: a secret string prepended to the daily salt to make the hash
-  // harder to brute-force back to an IP. Set in Pages → Settings → env vars.
-  // If unset, falls back to a hardcoded constant — still privacy-safe, just
-  // less paranoid.
-  VISITOR_SALT_SEED?: string;
-}
+//   - The 405 for non-POST methods is answered by worker/index.ts.
 
 const VALID_TYPES = new Set(['pageview', 'click']);
 const MAX_PATH_LEN = 200;
@@ -32,14 +23,11 @@ const MAX_BODY_BYTES = 4 * 1024; // hard cap on the beacon payload
 // Origins we accept beacons from. Same-origin requests from the browser will
 // send an Origin header matching one of these. Requests with no Origin
 // (e.g. curl, server-to-server) are rejected outright.
+// Production origin only: preview versions run with the same STATS binding,
+// so allowing *.workers.dev preview URLs would write preview traffic into
+// production numbers.
 const ALLOWED_ORIGINS = new Set([
   'https://bragfile.jysf.org',
-  // Preview deploys on pages.dev would otherwise 403 their own beacon. Keeping
-  // it means preview traffic lands in the same KV namespace as prod — the
-  // visitor hash includes the host, so the events stay distinguishable, but
-  // page counts mix. Accepted tradeoff: a silent 403 on every preview is worse
-  // than slightly polluted preview numbers.
-  'https://bragfile.pages.dev',
 ]);
 
 // Order matters: Edge identifies as Chrome, so detect "edg/" first.
@@ -103,24 +91,28 @@ function normalizeReferrer(value: unknown, selfHost: string): string | undefined
   }
 }
 
-export const onRequestPost: PagesFunction<Env> = async (ctx) => {
+export async function handleTrackPost(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<Response> {
   // Reject requests not coming from a browser tab on our domain.
   // This won't stop a determined attacker (Origin is forgeable from non-browser
   // clients), but it stops drive-by curl scripts from filling our KV quota.
-  const origin = ctx.request.headers.get('Origin');
+  const origin = request.headers.get('Origin');
   if (!origin || !ALLOWED_ORIGINS.has(origin)) {
     return new Response('forbidden', { status: 403 });
   }
 
   // Cap body size before parsing JSON
-  const contentLength = Number(ctx.request.headers.get('Content-Length') ?? 0);
+  const contentLength = Number(request.headers.get('Content-Length') ?? 0);
   if (contentLength > MAX_BODY_BYTES) {
     return new Response('payload too large', { status: 413 });
   }
 
   let body: any;
   try {
-    body = await ctx.request.json();
+    body = await request.json();
   } catch {
     return new Response('bad json', { status: 400 });
   }
@@ -134,23 +126,23 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     return new Response('bad path', { status: 400 });
   }
 
-  const cf = (ctx.request as any).cf ?? {};
+  const cf = (request as any).cf ?? {};
   const ts = Date.now();
   const id = crypto.randomUUID().slice(0, 6);
-  const visitor = await visitorHash(ctx.request, ctx.env.VISITOR_SALT_SEED);
+  const visitor = await visitorHash(request, env.VISITOR_SALT_SEED);
 
   const entry: Record<string, unknown> = {
     ts,
     type: body.type,
     path,
     target: trim(body.target, MAX_TARGET_LEN),
-    referrer: normalizeReferrer(body.referrer, new URL(ctx.request.url).host),
+    referrer: normalizeReferrer(body.referrer, new URL(request.url).host),
     source: trim(body.source, MAX_SOURCE_LEN),
     medium: trim(body.medium, MAX_SOURCE_LEN),
-    country: ctx.request.headers.get('CF-IPCountry') ?? undefined,
+    country: request.headers.get('CF-IPCountry') ?? undefined,
     city: typeof cf.city === 'string' ? cf.city : undefined,
     region: typeof cf.region === 'string' ? cf.region : undefined,
-    ua_family: uaFamily(ctx.request.headers.get('User-Agent')),
+    ua_family: uaFamily(request.headers.get('User-Agent')),
     visitor,
   };
 
@@ -162,19 +154,11 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // Fire-and-forget the KV write — response returns 204 immediately.
   // waitUntil keeps the Worker alive until the put resolves.
   ctx.waitUntil(
-    ctx.env.STATS.put(`evt:${ts}:${id}`, JSON.stringify(entry), {
+    env.STATS.put(`evt:${ts}:${id}`, JSON.stringify(entry), {
       expirationTtl: RETENTION_SECONDS,
       metadata: fitMetadata(entry),
     })
   );
 
   return new Response(null, { status: 204 });
-};
-
-// Reject everything except POST cleanly.
-export const onRequest: PagesFunction = ({ request }) => {
-  return new Response(`method ${request.method} not allowed`, {
-    status: 405,
-    headers: { Allow: 'POST' },
-  });
-};
+}

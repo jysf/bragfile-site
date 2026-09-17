@@ -40,7 +40,8 @@ by content, not ID.
 - Plain CSS in Astro scoped `<style>` blocks. No Tailwind, no CSS framework.
 - Design tokens as custom properties in `src/styles/tokens.css`
 - Astro's built-in Fonts API (configured in `astro.config.mjs`)
-- Cloudflare Pages
+- Cloudflare Worker `bragfile` (Workers Builds deploys on push to GitHub);
+  static assets from `dist/`, analytics endpoints from `worker/`
 
 ## Design system
 

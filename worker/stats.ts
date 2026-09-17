@@ -1,5 +1,4 @@
-// Self-hosted analytics dashboard.
-// Spec: docs/specs/analytics.md
+// Self-hosted analytics dashboard, served at /sitevisits.
 //
 // Public — accessible to anyone who knows the URL, not linked in nav.
 // Lists events from KV, aggregates in-memory, renders dark-themed HTML.
@@ -12,10 +11,7 @@ import {
   type Event,
   type Stats,
 } from './aggregate';
-
-interface Env {
-  STATS: KVNamespace;
-}
+import type { Env } from './env';
 
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) =>
@@ -74,7 +70,7 @@ function renderHtml({ events, truncated, legacySkipped }: LoadResult): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>stats - bragfile</title>
+<title>sitevisits - bragfile</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif; background: #0a0a0a; color: #e5e5e5; }
@@ -223,9 +219,9 @@ async function loadEvents(env: Env): Promise<LoadResult> {
   };
 }
 
-export const onRequest: PagesFunction<Env> = async (ctx) => {
+export async function handleStatsGet(_request: Request, env: Env): Promise<Response> {
   try {
-    const loaded = await loadEvents(ctx.env);
+    const loaded = await loadEvents(env);
     return new Response(renderHtml(loaded), {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
@@ -244,4 +240,4 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       { status: 500, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
     );
   }
-};
+}

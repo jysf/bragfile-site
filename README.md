@@ -60,17 +60,13 @@ Commit `src/data/log.json`. Run again at freeze time, after the final entry.
 
 ## Deploy
 
-Cloudflare Pages, custom domain `bragfile.jysf.org`. Build command
-`npm run build`, output directory `dist`.
+Cloudflare Worker `bragfile`, custom domain `bragfile.jysf.org`. Deployed
+automatically by Workers Builds: every push to the GitHub repo builds
+(`npm run build`) and deploys `dist/` plus `worker/`. No manual step.
 
-First-time setup (do this once):
-1. Create a Cloudflare Pages project in the dashboard (or use `wrangler`).
-2. Attach the custom domain `bragfile.jysf.org` to the project.
-3. `just login` (one-time — opens a browser for OAuth).
-4. `just deploy` — publishes the current `dist/` to the project.
-
-After that, you can also connect the GitHub repo for auto-deploy on push,
-or keep using `just deploy` for manual control.
+The Worker serves the static site and the first-party analytics endpoints:
+`POST /api/track` (ingest) and `GET /sitevisits` (dashboard, unlinked).
+Config lives in `wrangler.jsonc`, including the `STATS` KV namespace binding.
 
 Cloudflare Web Analytics is cookieless and needs no consent banner — a cookie
 dialog on this particular page would undercut the whole pitch.

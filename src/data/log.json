@@ -1,5 +1,27 @@
 [
   {
+    "id": 606,
+    "title": "Launch hit-list triage: grounded all four List-1 items in the code and re-scoped two of them",
+    "description": "Built LAUNCH-HITLIST.md for pre-launch work, planning-only, no code edits. Two surprises: public/favicon.svg is already the orange record (so item 3 is a cache/Safari-visibility bug, not a design change), and there is no fixed bottom nav - the tall element at the page bottom is the .attribution footer with 64px padding. Sequenced Base.astro-touching work after the in-flight analytics session merges.",
+    "tags": "log,agent:adal,model:qwen3.8-flash,session:4584a11b-a5a3-4490-a0d7-636fa6aec7cc",
+    "project": "bragfile-site",
+    "type": "",
+    "impact": "Launch work is now sequenced, scoped, and collision-free with the analytics session.",
+    "created_at": "2026-09-16T20:39:14Z",
+    "updated_at": "2026-09-16T20:39:14Z"
+  },
+  {
+    "id": 604,
+    "title": "Problem section cut to one illustration, stats panel shrunk",
+    "description": "Section 2 now shows the raccoon alone at 400px; the fox and capybara stay parked in the tree, commented, with their picture/webp markup intact. Stats panel dropped from 7rem to 4.5rem numerals and a tighter grid gap.",
+    "tags": "design,problem,agent:AdaL,model:deepseek-v4-flash-vision-exp,session:b7e3daac-9800-44da-b301-6180b71af44d",
+    "project": "bragfile-site",
+    "type": "shipped",
+    "impact": "Section 2 reads as one image instead of three stacked, and the trio is one uncomment away.",
+    "created_at": "2026-09-16T02:36:25Z",
+    "updated_at": "2026-09-16T02:36:25Z"
+  },
+  {
     "id": 603,
     "title": "sips cannot write webp on this machine",
     "description": "sips -s format webp returns an unknown-format error. cwebp and magick are both installed and encode fine, so derivative web images go through magick -resize -quality.",

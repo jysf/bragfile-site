@@ -1,0 +1,27 @@
+// Cloudflare Worker config for bragfile.jysf.org.
+//
+// Served by the Worker `bragfile`, deployed from GitHub via Workers Builds.
+// Static assets come from dist/ (Astro build output); the Worker handles
+// /api/track (analytics ingest) and /stats (dashboard), everything else falls
+// through to assets.
+//
+// The STATS KV namespace is bragfile-site's own — NOT shared with jysf.org's
+// jysf-org-stats, because events carry no host field and both sites serve "/".
+{
+  "name": "bragfile",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-15",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // The asset server would otherwise answer /api/track and /stats (404 /
+    // index.html) before the Worker ever sees the request.
+    "run_worker_first": ["/api/track", "/stats"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "STATS",
+      "id": "f7a0a24126704c478e4b280b2332f4e4"
+    }
+  ]
+}
