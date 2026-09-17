@@ -124,6 +124,45 @@ brag entry, build, deploy, stop.
 
 ---
 
+## Session 7 — launch polish (List 1)
+
+> Read LAUNCH-HITLIST.md first — it is the scope, and you tick items there as you
+> land them. DESIGN-SPEC.md and AGENTS.md are binding. Touch only the files named
+> per item. Analytics is merged; branch from main, no collisions expected.
+>
+> Three items, in this order:
+>
+> 1. **Footer height**: in `src/pages/index.astro`, `.attribution` padding
+>    `var(--space-8) var(--space-3)` → `var(--space-4) var(--space-3)`. Check the
+>    ≤600px media block and step it down proportionally. Build stamp stays
+>    right-aligned.
+> 2. **GitHub icon**: footer link only (`index.astro` ~L203) — inline Octicon SVG,
+>    `fill="currentColor"`, `aria-label="GitHub"`, keep `data-track="github-footer"`.
+>    The CTA link keeps the full URL as text — that is decided, do not change it.
+>    No icon assets exist yet; keep it inline, no new dependency.
+> 3. **Brew line out of the hero**: `scripts/hero.mjs` L207 renders
+>    `brew install jysf/tap/bragfile` into every frame. Delete that `<text>` line,
+>    run `just hero`, confirm the regenerated `public/hero.apng` has no footer
+>    line. This asset also feeds the TerminalTrove submission — cleaner there too.
+> **On hold (not this session)**: install command at the CopyButton — once the
+> brew line is gone from the image, the command exists nowhere in the DOM.
+> Options: (a) mono command text beside the button + Copy, or (b) the button
+> label IS the command, click copies, feedback "Copied". Owner picks first.
+>
+> Gates: `npm run build` and `npm run lint` pass; 375px check on the footer; no
+> raw colors/pixels (stylelint). Capture brags per AGENTS.md
+> (`--project bragfile-site`). Do NOT touch the hero image swap itself — that is
+> Session 8, after I pick a candidate from LAUNCH-HITLIST.md.
+>
+> Cheap-tier rules (this session runs on a 0.1x model):
+> - The hit list gives file + line anchors. If reality doesn't match what is
+>   described there, stop and report — never improvise a different change.
+> - Run build + lint after each item, not once at the end.
+> - Never disable or work around stylelint. Missing value → add a token or ask.
+> - CopyButton command display: do not implement until I answer (a) or (b).
+
+---
+
 ## Running rules for every session
 
 - Tell it which files to touch. Don't let it explore the repo.

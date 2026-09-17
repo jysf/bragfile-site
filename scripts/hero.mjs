@@ -203,8 +203,6 @@ function frameSvg(frameIdx) {
 
     ${sessionSvg}
     ${caret}
-
-    <text x="80" y="${H - 30}" font-family="monospace" font-size="20" fill="#8a9199">brew install jysf/tap/bragfile</text>
   </svg>`;
 }
 
