@@ -36,6 +36,11 @@ const buildIsLocal = buildShaRaw === "dev";
     <span class="rec-word">bragfile</span>
     <span class="rec-sep">·</span>
     <span class="rec-time">REC</span>
+    <a class="rec-gh" href="https://github.com/jysf/bragfile000" data-track="github-cta" aria-label="GitHub">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+        <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
+      </svg>
+    </a>
   </header>
 
   {/* 1 — HERO. Base band. */}
@@ -43,7 +48,10 @@ const buildIsLocal = buildShaRaw === "dev";
     <div class="column">
       <h1>The flight recorder for your work.</h1>
       <p class="lede">A local-first CLI for capturing what you got done — shipped, fixed, learned, mentored — into SQLite at <code>~/.bragfile/db.sqlite</code>. No cloud, no account, no sync.</p>
-      <div class="mt-6"><CopyButton value="brew install jysf/tap/bragfile" track="copy-install-hero" /></div>
+      <div class="mt-6">
+        <CopyButton value="brew install jysf/tap/bragfile" track="copy-install-hero" />
+        <p class="cta-command">brew install jysf/tap/bragfile</p>
+      </div>
     </div>
     <div class="wide">
       <img
@@ -185,10 +193,8 @@ alongside yours`}
       <p class="mt-2">Capture what happened. Find it when it counts.</p>
       <div class="mt-6">
         <CopyButton value="brew install jysf/tap/bragfile" inverse track="copy-install-footer" />
+        <p class="cta-command">brew install jysf/tap/bragfile</p>
       </div>
-      <p class="cta-meta">
-        <a href="https://github.com/jysf/bragfile000" data-track="github-cta">github.com/jysf/bragfile000</a>
-      </p>
     </div>
   </section>
 
@@ -200,7 +206,11 @@ alongside yours`}
       <span class="attribution-sep">·</span>
       <a href="https://jysf.org/?source=bragfile" data-track="jysf-org-footer">jysf.org</a>
       <span class="attribution-sep">·</span>
-      <a href="https://github.com/jysf/bragfile000" data-track="github-footer">github</a>
+      <a class="github-icon" href="https://github.com/jysf/bragfile000" data-track="github-footer" aria-label="GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
+        </svg>
+      </a>
     </span>
     <span class="build-stamp" title={buildIsLocal ? "local build (no commit source found)" : `deployed ${buildShaRaw}`}>build {buildSha}</span>
   </footer>
@@ -261,6 +271,17 @@ alongside yours`}
     letter-spacing: 0.18em;
   }
   .rec-sep { opacity: 0.4; }
+
+  /* GitHub icon pinned to the strip's right edge — same repo link the
+     CTA carried, moved to the header. Inherits the strip's muted mono. */
+  .rec-gh {
+    position: absolute;
+    right: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    color: var(--muted);
+  }
+  .rec-gh:hover { color: var(--text); }
 
   /* ===== Section bands — full-bleed, alternating rhythm.
      Content inside the column wraps to 720/960 columns. ===== */
@@ -521,24 +542,20 @@ alongside yours`}
     box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
   }
 
-  /* ===== §6 CTA — install button does the loud work; the github URL is a
-     citation, demoted to muted mono so it doesn't compete. ===== */
-  .cta-meta {
-    margin-top: var(--space-4);
-  }
+  /* ===== §6 CTA — install button does the loud work; the command as
+     scannable text sits under it, dimmed so the button stays loud. ===== */
 
-  .cta-meta a {
+  /* Install command as scannable text under the button — mono because it
+     is a real command; inherits band color so it works on both the hero
+     (--text on --base) and the signal band (--base on --signal). */
+  .cta-command {
+    margin-top: var(--space-2);
     font-family: var(--font-mono);
     font-size: var(--size-meta);
     line-height: var(--lh-meta);
-    color: var(--base);
     opacity: 0.6;
     letter-spacing: 0.04em;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
   }
-  .cta-meta a:hover { opacity: 0.85; }
 
   /* ===== Attribution — quiet mono line below the CTA on --base. ===== */
   .attribution {
@@ -547,7 +564,7 @@ alongside yours`}
     align-items: center;
     flex-wrap: wrap;
     gap: var(--space-3);
-    padding: var(--space-8) var(--space-3);
+    padding: var(--space-4) var(--space-3);
     background-color: var(--base);
     font-family: var(--font-mono);
     font-size: var(--size-meta);
@@ -571,6 +588,14 @@ alongside yours`}
   }
   .attribution a:hover { color: var(--text); }
   .attribution-sep { opacity: 0.4; }
+
+  /* Footer GitHub link is icon-only: drop the shared underline, keep the
+     icon on the meta baseline so it reads as part of the mono line. */
+  .attribution a.github-icon {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
 
   /* Build stamp — sits at the bottom-right of the attribution row.
      Hover reveals the full SHA via title attribute. */
