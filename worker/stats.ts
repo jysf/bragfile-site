@@ -72,42 +72,45 @@ function renderHtml({ events, truncated, legacySkipped }: LoadResult): string {
 <meta name="robots" content="noindex, nofollow">
 <title>sitevisits - bragfile</title>
 <style>
+  /* Mirrors the home page's design system (src/styles/tokens.css). Values are
+     inlined because this page is Worker-rendered, outside Astro's pipeline —
+     keep them in sync with tokens.css if the palette changes. */
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif; background: #0a0a0a; color: #e5e5e5; }
+  html { font-family: 'Archivo', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: #282c34; color: #dce1e6; }
   body { min-height: 100dvh; padding: 2rem; }
-  .wrap { max-width: 880px; margin: 0 auto; }
-  h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.25rem; }
-  .sub { color: #888; font-size: 0.85rem; margin-bottom: 2rem; }
-  .totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 2rem; }
-  .stat { background: #111; border: 1px solid #1f1f1f; padding: 1rem; border-radius: 8px; }
-  .stat .label { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
-  .stat .num { font-size: 1.6rem; font-weight: 600; margin-top: 0.25rem; font-variant-numeric: tabular-nums; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.25rem; }
-  section { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 1rem 1.25rem; }
-  section h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #888; margin-bottom: 0.75rem; font-weight: 600; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-  td { padding: 0.35rem 0; border-bottom: 1px solid #1a1a1a; }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 2rem; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+  .sub { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; margin-bottom: 2rem; }
+  .totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 2rem; }
+  .stat { background: #1f2329; padding: 16px; }
+  .stat .label { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .stat .num { font-size: 2.5rem; font-weight: 700; margin-top: 8px; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
+  section { background: #1f2329; padding: 16px 24px; }
+  section h2 { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; color: #8a9199; margin-bottom: 12px; font-weight: 400; }
+  table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.9375rem; line-height: 1.4; }
+  td { padding: 8px 0; border-bottom: 1px solid #282c34; }
   tr:last-child td { border-bottom: none; }
-  td.k { color: #ccc; }
-  td.v, th.v { color: #888; text-align: right; font-variant-numeric: tabular-nums; padding-left: 1rem; width: 4rem; }
-  th.v { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; padding-bottom: 0.5rem; }
-  .empty { color: #555; font-size: 0.85rem; font-style: italic; }
-  .meta { color: #555; font-size: 0.8rem; }
+  td.k { color: #dce1e6; }
+  td.v, th.v { color: #8a9199; text-align: right; font-variant-numeric: tabular-nums; padding-left: 1rem; width: 4rem; }
+  th.v { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; padding-bottom: 8px; }
+  .empty { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; font-style: italic; }
+  .meta { color: #8a9199; font-size: 0.8125rem; }
   .hours { display: flex; align-items: flex-end; gap: 2px; height: 80px; margin-top: 0.25rem; }
   .hour { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; }
-  .hour .bar { background: #6a8caf; width: 100%; border-radius: 2px 2px 0 0; min-height: 2px; opacity: 0.7; transition: opacity 0.2s; }
+  .hour .bar { background: #e04e1b; width: 100%; border-radius: 2px 2px 0 0; min-height: 2px; opacity: 0.7; transition: opacity 0.2s; }
   .hour:hover .bar { opacity: 1; }
-  .hour .hr { color: #555; font-size: 0.6rem; margin-top: 0.25rem; font-variant-numeric: tabular-nums; }
-  .spark { font-size: 1.5rem; line-height: 1; letter-spacing: 0; color: #6a8caf; word-break: break-all; }
-  .spark-meta { color: #888; font-size: 0.8rem; margin-top: 0.5rem; }
-  .foot { margin-top: 2rem; color: #555; font-size: 0.8rem; text-align: center; }
-  a { color: #888; text-decoration: underline; text-decoration-color: #333; text-underline-offset: 3px; }
-  a:hover { color: #e5e5e5; }
+  .hour .hr { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.6rem; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .spark { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 1.5rem; line-height: 1; letter-spacing: 0; color: #e04e1b; word-break: break-all; }
+  .spark-meta { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; margin-top: 8px; }
+  .foot { margin-top: 2rem; color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-align: center; }
+  a { color: #e04e1b; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: #dce1e6; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>stats</h1>
+  <h1>sitevisits</h1>
   <p class="sub">first-party analytics for bragfile.jysf.org · <a href="/">home</a></p>
 
   <div class="totals">
