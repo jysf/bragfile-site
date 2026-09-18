@@ -36,7 +36,6 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <text x="80" y="130" font-family="sans-serif" font-size="64" font-weight="600" fill="#dce1e6">bragfile</text>
   <text x="80" y="190" font-family="monospace" font-size="26" fill="#8a9199">${entries.length} entries · captured live · never reconstructed</text>
   ${bars}
-  <text x="80" y="560" font-family="monospace" font-size="22" fill="#8a9199">brew install jysf/tap/bragfile</text>
 </svg>`;
 
 const png = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } })
