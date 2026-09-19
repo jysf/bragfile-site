@@ -298,12 +298,16 @@ crustyimg (3): █▅▁▁`}
   .rec-sep { opacity: 0.4; }
 
   /* GitHub icon pinned to the strip's right edge — same repo link the
-     CTA carried, moved to the header. Inherits the strip's muted mono. */
+     CTA carried, moved to the header. Inherits the strip's muted mono.
+     Padding expands the hit area to ~44px; negative margin keeps the
+     glyph's visual position unchanged. */
   .rec-gh {
     position: absolute;
     right: var(--space-3);
     display: inline-flex;
     align-items: center;
+    padding: var(--space-2);
+    margin: calc(-1 * var(--space-2));
     color: var(--muted);
   }
   .rec-gh:hover { color: var(--text); }
@@ -594,6 +598,12 @@ crustyimg (3): █▅▁▁`}
     flex-wrap: wrap;
     gap: var(--space-3);
     padding: var(--space-4) var(--space-3);
+
+    /* Safe-area: keep the footer clear of the home-indicator curve.
+       max() picks the larger of token padding and the inset. */
+    padding-left: max(var(--space-3), env(safe-area-inset-left));
+    padding-right: max(var(--space-3), env(safe-area-inset-right));
+    padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
     background-color: var(--base);
     font-family: var(--font-mono);
     font-size: var(--size-meta);
@@ -619,10 +629,14 @@ crustyimg (3): █▅▁▁`}
   .attribution-sep { opacity: 0.4; }
 
   /* Footer GitHub link is icon-only: drop the shared underline, keep the
-     icon on the meta baseline so it reads as part of the mono line. */
+     icon on the meta baseline so it reads as part of the mono line.
+     Padding expands the hit area to ~44px; negative margin keeps the
+     glyph's visual position unchanged. */
   .attribution a.github-icon {
     display: inline-flex;
     align-items: center;
+    padding: var(--space-2);
+    margin: calc(-1 * var(--space-2));
     text-decoration: none;
   }
 
