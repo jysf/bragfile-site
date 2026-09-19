@@ -95,8 +95,10 @@ const buildIsLocal = buildShaRaw === "dev";
     </div>
     <div class="wide">
       <div class="flows mt-6">
-        <TerminalFrame command='brag add "shipped the schema fix"'>
-{`+ entry 591`}
+        <TerminalFrame command={'brag add -t "shipped the schema fix" \\\n           -p bragfile-site \\\n           -T "db,hero,agent:adal,model:glm-5.3,session:17748077" \\\n           -k shipped'}>
+{`+ entry 591
+  tags: db,hero,agent:adal,model:glm-5.3
+        session:17748077`}
         </TerminalFrame>
         <div class="flows-junction" aria-hidden="true">
           <span class="flows-junction-line"></span>
@@ -137,6 +139,20 @@ alongside yours`}
           <span class="trend-label mono muted">monthly agent share</span>
           <span class="trend-bars">▁▁▁▁▁▁▃▇█</span>
         </div>
+      </div>
+      <div class="flows mt-6">
+        <TerminalFrame command="brag spark --week">
+{`Total (76): ▇█▂▂▄▅▁
+cc-pilot-harness (44): ▇█▂▃▁▁▁
+bragfile-site (32): ▁▁▃▂▇█▃`}
+        </TerminalFrame>
+        <TerminalFrame command="brag spark --month">
+{`Total (221): ▁▁█▅
+cc-pilot-harness (162): ▁▁█▄
+bragfile-site (32): ▁▁▁█
+brag (12): ▆▁█▁
+crustyimg (3): █▅▁▁`}
+        </TerminalFrame>
       </div>
     </div>
   </section>

@@ -23,6 +23,12 @@ const { command } = Astro.props;
     line-height: var(--lh-meta);
     color: var(--muted);
     margin-bottom: var(--space-2);
+
+    /* Commands are pre-formatted: long flag lists break with explicit
+       backslash continuations (as a real shell shows them), never
+       word-wrapped at arbitrary points. */
+    white-space: pre;
+    overflow-x: auto;
   }
 
   pre {
