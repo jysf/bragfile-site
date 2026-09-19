@@ -15,6 +15,11 @@ const { command } = Astro.props;
     background-color: var(--panel);
     padding: var(--space-3);
     overflow-x: auto;
+
+    /* Bezel hairline — same edge motif as the hero image and the stats
+       panel, so frames stay visible when they sit on a band of their
+       own color (e.g. spark examples inside the panel band). */
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
   }
 
   .cmd {
