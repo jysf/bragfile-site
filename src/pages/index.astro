@@ -170,7 +170,15 @@ crustyimg (3): █▅▁▁`}
         }} />
         <div class="mt-1"><Freshness /></div>
       </div>
-      <table class="log-table mt-6">
+    </div>
+    {/* Terminal-style tabular output breaks wider, like the frames in
+       sections 1/3/4 — the fixed 85ch columns need more than 720px. */}
+    <div class="wide">
+      {/* Scroll container — the spec's mobile rule for tabular output:
+          horizontal scroll inside the frame, never shrink the type.
+          Mirrors the TerminalFrame pattern. */}
+      <div class="log-scroll mt-6">
+        <table class="log-table">
         <colgroup>
           <col class="col-text" />
           <col class="col-type" />
@@ -196,6 +204,7 @@ crustyimg (3): █▅▁▁`}
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   </section>
 
@@ -389,7 +398,7 @@ crustyimg (3): █▅▁▁`}
   .stats-panel {
     background-color: var(--base);
     padding: var(--space-6);
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 6%);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
   }
 
   .stats-header {
@@ -482,6 +491,10 @@ crustyimg (3): █▅▁▁`}
   }
 
   /* ===== §5 log table — tabular treatment replacing the Finding cards. ===== */
+  .log-scroll {
+    overflow-x: auto;
+  }
+
   .log-table {
     width: 100%;
     border-collapse: collapse;
