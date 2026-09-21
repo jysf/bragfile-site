@@ -1,7 +1,7 @@
 ---
 // Label says what happens. No arrow glyph.
 // `inverse` swaps the button for use on a --signal background: dark
-// button with --signal text instead of the default --signal button.
+// button with --text label instead of the default --signal button.
 interface Props {
   value: string;
   inverse?: boolean;
@@ -12,19 +12,32 @@ interface Props {
 const { value, inverse = false, track } = Astro.props;
 ---
 <button class:list={["copy", inverse && "inverse"]} data-value={value} data-track={track}>Copy install command</button>
+{/* The label swap is the only confirmation this page gives, and a label
+    swap is silent to a screen reader. Mirror it into a live region. */}
+<span class="copy-status" role="status" aria-live="polite"></span>
 
 <style>
   .copy {
     background-color: var(--signal);
-    color: var(--base);
+    color: var(--ink);
     font-family: var(--font-sans);
     font-size: var(--size-body);
     line-height: var(--lh-body);
+
+    /* space-1 top/bottom read as 43px tall — one pixel short of the 44px
+       touch target. The extra pixel comes from the border, which also
+       gives the button a defined edge on the --signal band. */
     padding: var(--space-1) var(--space-2);
-    border: 0;
+    border: 1px solid transparent;
     border-radius: var(--radius);
     cursor: pointer;
     transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+
+    /* "Copied" is half the width of "Copy install command". Without a
+       floor the button collapses mid-interaction and shoves the command
+       line under it. 208px clears the longest label (202px measured) and
+       stays on the 8px scale, so every state is exactly this wide. */
+    min-width: 208px;
   }
 
   .copy:hover {
@@ -44,10 +57,12 @@ const { value, inverse = false, track } = Astro.props;
   }
 
   /* Inverse variant: dark button for use on a --signal background.
-     White-tinted shadow on hover to keep the same lift beat. */
+     --signal on --base is 3.52:1, so the label is --text instead — the
+     band is already carrying the orange. White-tinted shadow on hover to
+     keep the same lift beat. */
   .copy.inverse {
     background-color: var(--base);
-    color: var(--signal);
+    color: var(--text);
   }
 
   .copy.inverse:hover {
@@ -57,15 +72,54 @@ const { value, inverse = false, track } = Astro.props;
   .copy.inverse:active {
     box-shadow: 0 2px 8px rgb(255 255 255 / 10%);
   }
+
+  /* Announced, never drawn — the visible confirmation is the label. */
+  .copy-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 </style>
 
 <script>
   document.querySelectorAll<HTMLButtonElement>(".copy").forEach((btn) => {
+    const status = btn.nextElementSibling as HTMLElement | null;
+    let revert: ReturnType<typeof setTimeout> | undefined;
+
     btn.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(btn.dataset.value ?? "");
-      const original = btn.textContent;
-      btn.textContent = "Copied";
-      setTimeout(() => { btn.textContent = original; }, 2000);
+      const original = "Copy install command";
+      const value = btn.dataset.value ?? "";
+      let label: string;
+
+      // An unguarded await here used to swallow the whole interaction:
+      // writeText rejects on an insecure context or a denied permission,
+      // the line below never ran, and the visitor was left clicking a
+      // button that gave no sign it had done anything — at the one step
+      // the page exists to reach. Name the failure instead.
+      let ok = true;
+      try {
+        await navigator.clipboard.writeText(value);
+        label = "Copied";
+      } catch {
+        ok = false;
+        label = "Copy failed";
+      }
+
+      btn.textContent = label;
+      if (status) {
+        status.textContent = ok
+          ? `Copied: ${value}`
+          : "Copy failed. The install command is written out below the button.";
+      }
+
+      clearTimeout(revert);
+      revert = setTimeout(() => {
+        btn.textContent = original;
+        if (status) status.textContent = "";
+      }, 2000);
     });
   });
 </script>

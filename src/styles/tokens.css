@@ -10,14 +10,22 @@
    --------------------------------------------------------------- */
 
 :root {
-  /* Color — six values, sampled from the product's own terminal output
+  /* Color — seven values, sampled from the product's own terminal output
      so screenshots look native to the page rather than pasted onto it. */
   --base:   #282c34; /* page background */
   --panel:  #1f2329; /* recessed frames, terminal containers */
   --signal: #e04e1b; /* bridge orange, brightened to survive dark */
   --text:   #dce1e6; /* body copy */
-  --muted:  #8a9199; /* metadata, timestamps, secondary */
+  --muted:  #9aa3ad; /* metadata, timestamps, secondary */
   --output: #fff; /* RESERVED: terminal output only, never page text */
+
+  /* RESERVED: type that sits ON --signal, and nothing else. --base on
+     --signal is 3.52:1 — fine for the 32px head, short of AA for the
+     body copy, the install command and the button label that share that
+     band. Darkening the ink rather than the orange keeps --signal at the
+     exact hex that survives the white sparkline blocks beside it
+     (DESIGN-SPEC.md, Color), and lands those at 4.63:1. */
+  --ink:    #121418;
 
   /* Type — --font-sans and --font-mono are injected by Astro's Fonts API.
      Five reading sizes plus two display sizes for stats panels. Do not
@@ -54,6 +62,16 @@
   --column: 720px;
   --column-wide: 960px;
   --radius: 4px;
+
+  /* Band gutter. Bands are full-bleed, but their CONTENTS sit in a
+     centered --column-wide block: below ~1008px this is just the 24px
+     page margin, and above it the gutter grows so the block stays
+     centered instead of the layout drifting toward the left window edge
+     (at 1440px the old fixed 24px left 456px of dead screen on the
+     right). The columns keep their own widths and stay LEFT-aligned
+     inside the block, so the prose and the terminal frames keep the
+     shared left edge DESIGN-SPEC.md asks for. */
+  --gutter: max(var(--space-3), calc((100% - var(--column-wide)) / 2));
 }
 
 *, *::before, *::after { box-sizing: border-box; }

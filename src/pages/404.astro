@@ -15,7 +15,7 @@ import Placard from "../components/Placard.astro";
 <style>
   section {
     max-width: var(--column);
-    padding: var(--space-12) var(--space-3);
+    padding: var(--space-12) var(--gutter);
   }
 
   h1 {
@@ -31,6 +31,12 @@ import Placard from "../components/Placard.astro";
     font-family: var(--font-mono);
     font-size: var(--size-data);
     line-height: var(--lh-data);
-    color: var(--signal);
+
+    /* --signal on --base is 3.52:1 — under AA at this size, and
+       DESIGN-SPEC.md reserves the orange for display type and rules.
+       The underline carries the affordance instead of the color. */
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>

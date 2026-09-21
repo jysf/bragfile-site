@@ -6,6 +6,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { Resvg } from "@resvg/resvg-js";
+import { MONO, RESVG_FONT } from "./fonts.mjs";
 
 const entries = JSON.parse(readFileSync("src/data/log.json", "utf8"));
 
@@ -34,11 +35,14 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <rect width="1200" height="630" fill="#282c34"/>
   <rect x="0" y="0" width="1200" height="8" fill="#e04e1b"/>
   <text x="80" y="130" font-family="sans-serif" font-size="64" font-weight="600" fill="#dce1e6">bragfile</text>
-  <text x="80" y="190" font-family="monospace" font-size="26" fill="#8a9199">${entries.length} entries · captured live · never reconstructed</text>
+  <text x="80" y="190" font-family="${MONO.family}" font-size="26" fill="#9aa3ad">${entries.length} entries · captured live · never reconstructed</text>
   ${bars}
 </svg>`;
 
-const png = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } })
+const png = new Resvg(svg, {
+  fitTo: { mode: "width", value: 1200 },
+  font: RESVG_FONT,
+})
   .render()
   .asPng();
 writeFileSync("public/og.png", png);

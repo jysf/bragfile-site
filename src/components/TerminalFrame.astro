@@ -5,9 +5,23 @@
 interface Props { command?: string; }
 const { command } = Astro.props;
 ---
-<div class="frame">
-  {command && <div class="cmd">$ {command}</div>}
-  <pre><slot /></pre>
+{/* tabindex + role: the frame is a horizontal scroll container, and a
+    scroll container that nothing can focus is unreachable by keyboard —
+    the clipped columns simply do not exist for anyone not using a
+    pointer. */}
+<div
+  class="frame"
+  tabindex="0"
+  role="region"
+  aria-label={command ? `terminal output: ${command.split("\n")[0]}` : "terminal output"}
+>
+  {/* One scroller, not two. The command line used to carry its own
+      overflow-x, so scrolling the command left the output behind and the
+      two halves of a single session drifted out of register. */}
+  <div class="frame-track">
+    {command && <div class="cmd">$ {command}</div>}
+    <pre><slot /></pre>
+  </div>
 </div>
 
 <style>
@@ -22,6 +36,13 @@ const { command } = Astro.props;
     box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
   }
 
+  /* Shrink-to-fit so the track is as wide as its widest line, and both
+     children scroll as one. */
+  .frame-track {
+    display: inline-block;
+    min-width: 100%;
+  }
+
   .cmd {
     font-family: var(--font-mono);
     font-size: var(--size-meta);
@@ -33,7 +54,6 @@ const { command } = Astro.props;
        backslash continuations (as a real shell shows them), never
        word-wrapped at arbitrary points. */
     white-space: pre;
-    overflow-x: auto;
   }
 
   pre {
