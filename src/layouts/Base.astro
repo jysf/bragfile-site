@@ -66,6 +66,12 @@ const ogImage = new URL("/og.png", Astro.site).href;
     )}
   </head>
   <body>
+    {/* header and footer sit OUTSIDE main on purpose: nested inside it
+        they are generic <div>s to a screen reader, with no banner or
+        contentinfo landmark to jump to. Pages that have neither just
+        leave the named slots empty. */}
+    <slot name="header" />
     <main><slot /></main>
+    <slot name="footer" />
   </body>
 </html>

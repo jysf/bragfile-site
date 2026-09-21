@@ -34,7 +34,7 @@ Register: plain, investigative, unhurried. Findings, not marketing.
 
 ## Color
 
-Six values. Sampled from the product's own terminal output so screenshots look
+Seven values. Sampled from the product's own terminal output so screenshots look
 native to the page rather than pasted onto it.
 
 ```css
@@ -42,8 +42,9 @@ native to the page rather than pasted onto it.
 --panel:  #1F2329;  /* recessed frames, terminal containers */
 --signal: #E04E1B;  /* the orange — Golden Gate, brightened to survive dark */
 --text:   #DCE1E6;  /* body copy */
---muted:  #8A9199;  /* secondary text, metadata, timestamps */
+--muted:  #9AA3AD;  /* secondary text, metadata, timestamps */
 --white:  #FFFFFF;  /* RESERVED: terminal output only. Never for page text. */
+--ink:    #121418;  /* RESERVED: type ON --signal. Never anywhere else. */
 ```
 
 **Rules**
@@ -53,8 +54,24 @@ native to the page rather than pasted onto it.
 - `--signal` never carries body text — it fails contrast on dark at small sizes.
   Use it for display type, rules, the CTA panel, and active states only.
 - Exactly one orange. No tints, no gradients, no second accent color.
-- The final CTA is a full-bleed `--signal` panel with `--base` type on it. That
+- The final CTA is a full-bleed `--signal` panel with `--ink` type on it. That
   is the one loud moment on the page. Nothing else competes with it.
+- **Never use `opacity` to make text quieter.** It composites against whatever
+  band is behind it, so one rule produced 4.88:1 in the hero and 2.24:1 on the
+  CTA — on the install command, the most important string on the page. Reach for
+  a color token instead.
+
+**Why `--ink`, and why `--muted` moved**
+
+`--base` on `--signal` is 3.52:1. That carries the 32px head on the CTA panel
+(large text needs 3:1) but not the body copy, the install command or the button
+label that share it. The orange itself is not negotiable — it was picked against
+a real `brag spark` screenshot with white blocks adjacent, and every darker
+orange that helps white *hurts* dark type. So the ink darkens instead: `--ink`
+on `--signal` is 4.63:1, and `--signal` keeps its exact hex.
+
+`--muted` was `#8A9199`, which is 4.39:1 on `--base` — just under AA at the 13px
+meta size it is used at. `#9AA3AD` is 5.48:1 and the same hue.
 
 **If testing variants:** hold everything else fixed, change only the hex, and
 judge each against a real `brag spark` screenshot with white blocks adjacent.
@@ -69,6 +86,19 @@ Two families, clearly distinct.
 **JetBrains Mono** — all terminal output, data rows, counts, timestamps, commands.
 Chosen because it renders the block characters `▁▂▃▄▅▆▇█` correctly. Verify this
 before committing to any alternative; many monospace faces lack them.
+
+The face having the glyphs is not sufficient — **the fallback chain has to be
+monospace too.** Astro subsets Google fonts to `latin`, which stops at U+024F, so
+the blocks (U+2580–259F) never came from JetBrains Mono at all; they fell through
+to Astro's default fallback, which is Arial. `▄` and `█` rendered 14.3px against
+9.0px for every other character, and each sparkline came out ragged. The mono
+family therefore declares its own `fallbacks` in `astro.config.mjs`. The same
+trap exists in `scripts/hero.mjs`: resvg resolves generic `monospace` to whatever
+its font database offers first, so that script names a real font file and throws
+if it cannot find one.
+
+**Check both after any font change:** compare the advance width of `█` against
+`M` in the page, and look at a generated `hero.apng` frame.
 
 **Archivo** — headings and body. A signage-derived grotesque, industrial without
 being a costume. Use Archivo Expanded for the hero only.
@@ -102,6 +132,15 @@ Most dev tool pages center their hero. Left alignment is deliberate here: a
 recorder produces a log, and a log reads top-to-bottom from a consistent left
 margin. It also gives the terminal frames a shared edge with the prose, which
 centered layouts can't do.
+
+**The columns are left-aligned; the block they sit in is centered.** Bands stay
+full-bleed, but their contents sit inside a centered `--column-wide` block via
+the `--gutter` token. Below ~1008px that gutter is just the 24px page margin and
+nothing changes. Above it, a fixed left margin meant the whole page drifted to
+one side of the window — at 1440px the content ended at 984px and left 456px of
+dead screen. Centering the *block* rather than each column keeps both rules
+above: 720 and 960 still start at the same x, so the prose and the frames keep
+their shared edge, and the log still reads from one consistent margin.
 
 ---
 

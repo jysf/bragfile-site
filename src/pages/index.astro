@@ -31,7 +31,7 @@ const buildIsLocal = buildShaRaw === "dev";
 ---
 <Base title={title} description={description}>
 
-  <header class="rec-strip" aria-label="recording indicator">
+  <header slot="header" class="rec-strip" aria-label="recording indicator">
     <span class="rec-dot"></span>
     <span class="rec-word">bragfile</span>
     <span class="rec-sep">·</span>
@@ -54,13 +54,39 @@ const buildIsLocal = buildShaRaw === "dev";
       </div>
     </div>
     <div class="wide">
-      <img
-        src="/hero.apng"
-        alt="brag spark --week terminal output: 120 entries this week, pulse chart by project"
-        width="1200"
-        height="630"
-        class="hero-img"
-      />
+      {/* Four sources, most specific first. The wide APNG is 1200px of
+          terminal capture; at 327px on a phone that is a 3.7x downscale
+          and the type lands near 4px, so narrow screens get a variant
+          with fewer commands at a larger scale. And an APNG animates
+          whatever prefers-reduced-motion says — CSS cannot pause it —
+          so both variants also ship a still of the settled end frame. */}
+      <picture>
+        <source
+          media="(prefers-reduced-motion: reduce) and (width <= 600px)"
+          srcset="/hero-narrow-poster.png"
+          width="640"
+          height="560"
+        />
+        <source
+          media="(prefers-reduced-motion: reduce)"
+          srcset="/hero-poster.png"
+          width="1200"
+          height="630"
+        />
+        <source
+          media="(width <= 600px)"
+          srcset="/hero-narrow.apng"
+          width="640"
+          height="560"
+        />
+        <img
+          src="/hero.apng"
+          alt="A terminal session: brag add records an entry with agent and model tags, then brag list, brag spark --week and --month draw bar charts of entries per day, and brag stats and brag wrapped summarize the year."
+          width="1200"
+          height="630"
+          class="hero-img"
+        />
+      </picture>
     </div>
   </section>
 
@@ -177,7 +203,12 @@ crustyimg (3): █▅▁▁`}
       {/* Scroll container — the spec's mobile rule for tabular output:
           horizontal scroll inside the frame, never shrink the type.
           Mirrors the TerminalFrame pattern. */}
-      <div class="log-scroll mt-6">
+      <div
+        class="log-scroll mt-6"
+        tabindex="0"
+        role="region"
+        aria-label="log entries, scrolls horizontally"
+      >
         <table class="log-table">
         <colgroup>
           <col class="col-text" />
@@ -187,10 +218,10 @@ crustyimg (3): █▅▁▁`}
         </colgroup>
         <thead>
           <tr>
-            <th>text</th>
-            <th>type</th>
-            <th>date</th>
-            <th>id</th>
+            <th scope="col">text</th>
+            <th scope="col">type</th>
+            <th scope="col">date</th>
+            <th scope="col">id</th>
           </tr>
         </thead>
         <tbody>
@@ -219,13 +250,20 @@ crustyimg (3): █▅▁▁`}
       <div class="mt-6">
         <CopyButton value="brew install jysf/tap/bragfile" inverse track="copy-install-footer" />
         <p class="cta-command">brew install jysf/tap/bragfile</p>
+        {/* Homebrew was the only door on the page, and the only other
+            link out was an unlabeled icon in the top strip. Both paths
+            below are the ones the README ships. */}
+        <p class="cta-alt">
+          Not on Homebrew? <code>go install github.com/jysf/bragfile000/cmd/brag@latest</code>,
+          or read the <a href="https://github.com/jysf/bragfile000#install" data-track="readme-cta">install notes</a>.
+        </p>
       </div>
     </div>
   </section>
 
   {/* Attribution — sits below the CTA panel on --base, outside the
        band's signal. Quiet mono line, two reference URLs. */}
-  <footer class="attribution">
+  <footer slot="footer" class="attribution">
     <span class="attribution-line">
       <span>made by jysf</span>
       <span class="attribution-sep">·</span>
@@ -315,17 +353,17 @@ crustyimg (3): █▅▁▁`}
   /* ===== Section bands — full-bleed, alternating rhythm.
      Content inside the column wraps to 720/960 columns. ===== */
   section {
-    padding: var(--space-12) var(--space-3);
+    padding: var(--space-12) var(--gutter);
   }
 
   section.act {
-    padding: var(--space-12) var(--space-3);
+    padding: var(--space-12) var(--gutter);
   }
 
   /* §6 coda — closer vertical padding so the page arrives at the
      install moment instead of padding around it. */
   section.cta {
-    padding: var(--space-8) var(--space-3);
+    padding: var(--space-8) var(--gutter);
   }
 
   .column {
@@ -340,8 +378,10 @@ crustyimg (3): █▅▁▁`}
   .band-panel { background-color: var(--panel); }
 
   .band-signal {
+    /* --ink, not --base: --base on --signal is 3.52:1, which carries the
+       32px head but not the body copy or the install command below it. */
     background-color: var(--signal);
-    color: var(--base);
+    color: var(--ink);
   }
   .band-signal h2 { color: inherit; }
 
@@ -586,8 +626,36 @@ crustyimg (3): █▅▁▁`}
     font-family: var(--font-mono);
     font-size: var(--size-meta);
     line-height: var(--lh-meta);
-    opacity: 0.6;
     letter-spacing: 0.04em;
+  }
+
+  /* Secondary install paths, under the button and the command. Archivo,
+     not mono — the sentence is prose; only the command inside it is a
+     command. Inherits --ink from the band; the inline <code> has to drop
+     the global --text fill, which is 3.0:1 on orange. */
+  .cta-alt {
+    margin-top: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+
+    /* --measure is 72ch sized for 17px reading prose; at 13px it caps
+       this line around 470px and breaks the go command across two rows
+       mid-URL. A one-line utility note gets the column instead. */
+    max-width: var(--column);
+  }
+
+  .cta-alt code {
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .cta-alt a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
 
   /* ===== Attribution — quiet mono line below the CTA on --base. ===== */
@@ -601,8 +669,8 @@ crustyimg (3): █▅▁▁`}
 
     /* Safe-area: keep the footer clear of the home-indicator curve.
        max() picks the larger of token padding and the inset. */
-    padding-left: max(var(--space-3), env(safe-area-inset-left));
-    padding-right: max(var(--space-3), env(safe-area-inset-right));
+    padding-left: max(var(--gutter), env(safe-area-inset-left));
+    padding-right: max(var(--gutter), env(safe-area-inset-right));
     padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
     background-color: var(--base);
     font-family: var(--font-mono);
@@ -646,13 +714,12 @@ crustyimg (3): █▅▁▁`}
     font-family: var(--font-mono);
     font-size: var(--size-meta);
     color: var(--muted);
-    opacity: 0.6;
     letter-spacing: 0.06em;
   }
 
   @media (width <= 600px) {
-    section { padding: var(--space-8) var(--space-3); }
-    section.act { padding: var(--space-8) var(--space-3); }
+    section { padding: var(--space-8) var(--gutter); }
+    section.act { padding: var(--space-8) var(--gutter); }
 
     h1 {
       font-size: var(--size-head);
