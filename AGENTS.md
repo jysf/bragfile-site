@@ -12,7 +12,17 @@ Capture when you ship something visible, fix something broken, learn something
 worth remembering (**including dead ends**), or make a decision with a tradeoff.
 
 Do not capture individual file edits, formatting, or dependency installs.
-Aim for 5-10 entries a day, not 50.
+
+**Brag what made a difference, not everything done.** Volume is the wrong
+axis; impact is the right one. A design decision that lands after four
+placements is one brag (the final placement), not four. Multiple tactical
+changes that together produce one outcome get one brag that names the
+outcome — the sub-items can live in the description, not as separate
+entries. If a change would be invisible at review-time, it probably
+isn't brag-worthy on its own: fold it into the surrounding work, or
+skip it. There is no "small brags" bucket — that bucket becomes the new
+noise. If a tactical item must be remembered, name it inside the
+description of the rolled-up brag that contains it.
 
 One plain sentence per entry: what happened and why it mattered. No marketing
 voice. Tag by page section so entries can be joined to sections at render time:
