@@ -146,7 +146,7 @@ their shared edge, and the log still reads from one consistent margin.
 
 ## Components
 
-Five. Build no others.
+Six. Build no others.
 
 **1. Data row** — derived from `brag spark` output: `label (count): ▁▂▃█`
 Label left, count in parens, blocks right. Reuse this pattern for feature rows
@@ -165,8 +165,28 @@ Mono, `--muted`, left-aligned.
 one-line statement, plain prose. Numbered *only* here, because findings genuinely
 are an enumerated list in a report.
 
-**5. Button** — solid `--signal`, `--base` text, 4px radius, no shadow, no arrow
+**5. Button** — solid `--signal`, `--ink` text, 4px radius, no shadow, no arrow
 glyph. Label says what happens: "Copy install command", not "Get started".
+
+**6. Command drawer** — the `brag` command reference, off a toggle at the top
+strip's left edge. Non-modal: no scrim, the page keeps scrolling behind it,
+because it is a reference you read *alongside* the page rather than a dialog
+that interrupts it. Every line in it is real `brag --help` output from the
+installed binary, same rule the terminal frames follow — there is no build-time
+link between the two, since the site builds on Cloudflare where `brag` is not
+installed, so re-run `brag --help` when the CLI gains a command.
+
+Two traps it hit, both worth knowing before the next one:
+
+- The toggle has to sit inside `.rec-strip` to reach its edge, and the panel
+  ships with it — so the strip's `text-transform: uppercase` and 0.12em
+  tracking inherit straight into a body of shell commands. `position: fixed`
+  escapes the strip's layout, not its cascade. The drawer resets both.
+- Its group headings were `--signal` at 13px: 3.96:1, under AA. That is the
+  rule two sections up, broken in new code within an hour of writing it down.
+  `tests/contrast.spec.ts` did not catch it and cannot — it asserts the
+  palette, not where each token is applied at what size. **A browser sweep is
+  still the only thing that catches misuse.**
 
 ---
 

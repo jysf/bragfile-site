@@ -5,6 +5,7 @@ import DataRow from "../components/DataRow.astro";
 import Placard from "../components/Placard.astro";
 import Finding from "../components/Finding.astro";
 import CopyButton from "../components/CopyButton.astro";
+import CommandDrawer from "../components/CommandDrawer.astro";
 import Freshness from "../components/Freshness.astro";
 import { findings, stats } from "../lib/log";
 
@@ -34,6 +35,7 @@ const buildIsLocal = buildShaRaw === "dev";
   <a class="skip" slot="header" href="#install">Skip to the install command</a>
 
   <header slot="header" class="rec-strip" aria-label="recording indicator">
+    <CommandDrawer />
     <span class="rec-dot"></span>
     <span class="rec-word">bragfile</span>
     <span class="rec-sep">·</span>

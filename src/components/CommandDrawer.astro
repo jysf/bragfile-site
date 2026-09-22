@@ -1,0 +1,477 @@
+---
+// The command reference, as a drawer off the top strip.
+//
+// Every line below is real `brag --help` output from the installed binary
+// (0.6.1), not a paraphrase — same rule the terminal frames follow. When the
+// CLI gains a command, re-run `brag --help` and add it here; there is no
+// build-time link between the two, because the site builds on Cloudflare
+// where brag is not installed.
+//
+// Non-modal on purpose: no scrim, the page keeps scrolling behind it. It is a
+// reference you read ALONGSIDE the page, not a dialog that interrupts it.
+
+interface Command {
+  run: string;
+  what: string;
+  flags?: string;
+}
+
+interface Group {
+  name: string;
+  note: string;
+  commands: Command[];
+}
+
+const groups: Group[] = [
+  {
+    name: "capture",
+    note: "by you, or by your agent",
+    commands: [
+      {
+        run: 'brag add -t "shipped the schema fix"',
+        what: "Add an entry. Everything but the title is optional.",
+        flags: "-d description · -i impact · -p project · -T tags · -k type · --json",
+      },
+      {
+        run: "brag edit <id>",
+        what: "Open an entry in $EDITOR.",
+      },
+      {
+        run: "brag delete <id> --yes",
+        what: "Delete an entry. Pair with add --json for programmatic edits.",
+      },
+    ],
+  },
+  {
+    name: "find",
+    note: "the corpus, read back",
+    commands: [
+      {
+        run: "brag list",
+        what: "List entries, newest first.",
+        flags: "--project · --day · --limit · --author agent|human · --format json|tsv",
+      },
+      {
+        run: "brag search <query>",
+        what: "Full-text search over titles, descriptions and impact.",
+        flags: "--limit",
+      },
+      {
+        run: "brag show <id>",
+        what: "One entry, rendered as markdown.",
+      },
+      {
+        run: "brag tags",
+        what: "Every tag with its usage count.",
+        flags: "--format json",
+      },
+    ],
+  },
+  {
+    name: "digest",
+    note: "what comes out at review time",
+    commands: [
+      {
+        run: "brag spark --week",
+        what: "Sparklines-only pulse: Total plus a row per project.",
+        flags: "--week · --month · --quarter · --project · --no-spark",
+      },
+      {
+        run: "brag stats",
+        what: "Lifetime stats — six aggregations over the whole corpus.",
+      },
+      {
+        run: "brag summary --range week",
+        what: "Rule-based digest over a rolling window.",
+        flags: "--range week|month · --project · --tag · --type",
+      },
+      {
+        run: "brag review --week",
+        what: "Recent entries grouped by project, plus three reflection questions.",
+        flags: "--week · --month",
+      },
+      {
+        run: "brag coverage --month",
+        what: "Agent-vs-human provenance share over a calendar period.",
+        flags: "--month · --quarter · --previous · --project · --no-spark",
+      },
+      {
+        run: "brag impact --quarter",
+        what: "Impact digest for a calendar reporting period.",
+        flags: "--month · --quarter · --previous · --project",
+      },
+      {
+        run: "brag wrapped 2026 Q2",
+        what: "Year- or quarter-in-review digest for a named period.",
+        flags: "--previous · --project · --tag · --no-spark",
+      },
+      {
+        run: "brag story --audience manager",
+        what: "Entries coalesced into threads for an LLM to weave.",
+        flags: "--audience me|manager|skip|exec · --month · --previous · --print-directive",
+      },
+    ],
+  },
+  {
+    name: "agents",
+    note: "the MCP surface",
+    commands: [
+      {
+        run: "brag mcp install",
+        what: "Register the brag MCP server in a client's config, idempotently.",
+        flags: "--client claude-code|claude-desktop|cursor · --scope project|user · --dry-run",
+      },
+      {
+        run: "brag memory",
+        what: "A ranked, token-budgeted slice of your history, as working memory.",
+        flags: "--budget · --project · --query",
+      },
+    ],
+  },
+  {
+    name: "move it",
+    note: "it is a file, so take it",
+    commands: [
+      {
+        run: "brag export --format json",
+        what: "Export entries machine-readable, or review-ready.",
+        flags: "--format json|markdown · --out · --flat · --project",
+      },
+      {
+        run: "brag project list",
+        what: "Manage projects: new, ensure, list, show, status, edit, archive, delete, here.",
+      },
+      {
+        run: "brag completion zsh",
+        what: "Shell completion for bash, zsh, fish or powershell.",
+      },
+    ],
+  },
+];
+
+const commandCount = groups.reduce((n, g) => n + g.commands.length, 0);
+---
+
+<button
+  type="button"
+  class="cmd-toggle"
+  id="cmd-toggle"
+  aria-expanded="false"
+  aria-controls="cmd-drawer"
+>
+  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round" />
+  </svg>
+  <span class="cmd-toggle-label">commands</span>
+</button>
+
+<aside class="cmd-drawer" id="cmd-drawer" aria-label="brag command reference" inert>
+  <div class="cmd-head">
+    <div class="cmd-head-text">
+      <span class="cmd-head-title">brag</span>
+      <span class="cmd-head-meta">{commandCount} commands · brag --help</span>
+    </div>
+    <button type="button" class="cmd-close" id="cmd-close" aria-label="Close the command reference">
+      <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="cmd-scroll">
+    {groups.map((group) => (
+      <section class="cmd-group">
+        <h2 class="cmd-group-name">
+          {group.name}
+          <span class="cmd-group-note">{group.note}</span>
+        </h2>
+        <ul class="cmd-list">
+          {group.commands.map((command) => (
+            <li class="cmd-item">
+              <code class="cmd-run">{command.run}</code>
+              <span class="cmd-what">{command.what}</span>
+              {command.flags && <code class="cmd-flags">{command.flags}</code>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <p class="cmd-foot">
+      Every command takes <code>--help</code>. The database is a file at
+      <code>~/.bragfile/db.sqlite</code>.
+    </p>
+  </div>
+</aside>
+
+<style>
+  /* ===== Toggle — mirrors .rec-gh at the strip's other edge. ===== */
+  .cmd-toggle {
+    position: absolute;
+    left: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    /* 34px tall on space-1 padding. The strip is only 40px, so the hit area
+       has to overflow it — same trick .rec-gh uses: pad to ~48px, then pull
+       the box back with a matching negative margin so nothing moves. */
+    padding: var(--space-2);
+    margin: calc(-1 * var(--space-2));
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .cmd-toggle:hover { color: var(--text); }
+
+  /* ===== Drawer ===== */
+  .cmd-drawer {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    z-index: 2;
+    width: min(400px, 100%);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--panel);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 8%), 8px 0 32px rgb(0 0 0 / 40%);
+
+    /* The toggle has to live inside .rec-strip to sit at its edge, and the
+       panel ships with it — so the strip's uppercase + 0.12em tracking
+       inherit straight into a body of real shell commands. `position: fixed`
+       escapes the strip's layout, not its cascade. DESIGN-SPEC.md's tells
+       list puts all-caps tracked-out text first for a reason. */
+    text-transform: none;
+    letter-spacing: normal;
+
+    /* Closed. `inert` (set in the markup, removed on open) is what actually
+       takes the links out of the tab order — visibility alone would leave a
+       drawer that Tab can reach but nobody can see. */
+    transform: translateX(-100%);
+    visibility: hidden;
+
+    /* visibility flips with a 0s duration, delayed to the end of the slide —
+       so it hides only once the panel is off-canvas, but SHOWS on the same
+       style recalc that opens it. Transitioning visibility instead would
+       leave it hidden at the instant the class lands, and .focus() on a
+       hidden element is a silent no-op. */
+    transition: transform 0.18s ease-out, visibility 0s linear 0.18s;
+  }
+
+  .cmd-drawer.open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.18s ease-out, visibility 0s linear 0s;
+  }
+
+  .cmd-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--base);
+  }
+
+  .cmd-head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cmd-head-title {
+    font-family: var(--font-sans);
+    font-size: var(--size-body);
+    line-height: var(--lh-body);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cmd-head-meta {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+  }
+
+  .cmd-close {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-right: calc(-1 * var(--space-1));
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .cmd-close:hover { color: var(--text); }
+
+  .cmd-scroll {
+    flex-grow: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-3);
+  }
+
+  .cmd-group + .cmd-group { margin-top: var(--space-4); }
+
+  .cmd-group-name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+    margin: 0 0 var(--space-2);
+    padding-left: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    font-weight: 400;
+
+    /* --text, not --signal. The orange is 3.96:1 on --panel: fine for the
+       72px stat on the page, under AA at 13px — which is the rule
+       DESIGN-SPEC.md already states. The accent moves to the rule instead,
+       which is one of the uses the spec does allow. */
+    color: var(--text);
+    border-left: 2px solid var(--signal);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .cmd-group-note {
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+
+  .cmd-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .cmd-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: var(--space-1) 0 var(--space-1) var(--space-2);
+    border-left: 1px solid var(--base);
+  }
+
+  .cmd-run {
+    font-family: var(--font-mono);
+    font-size: var(--size-data);
+    line-height: var(--lh-data);
+    color: var(--output);
+
+    /* A long invocation is one token; at 320px the drawer is the viewport. */
+    overflow-wrap: anywhere;
+  }
+
+  .cmd-what {
+    font-family: var(--font-sans);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--text);
+  }
+
+  .cmd-flags {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+
+  .cmd-foot {
+    margin: var(--space-4) 0 0;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--base);
+    font-family: var(--font-sans);
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+  }
+
+  .cmd-foot code {
+    font-size: var(--size-meta);
+    line-height: var(--lh-meta);
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+
+  /* The strip is 40px; the label would crowd the wordmark on a phone. */
+  @media (width <= 600px) {
+    .cmd-toggle-label { display: none; }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById("cmd-toggle");
+  const drawer = document.getElementById("cmd-drawer");
+  const close = document.getElementById("cmd-close");
+
+  if (toggle && drawer && close) {
+    const setOpen = (open: boolean) => {
+      drawer.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+
+      // The analytics beacon in Base.astro reads [data-track] when a click
+      // bubbles up to document, which happens AFTER this handler. So the
+      // attribute is only present on the way OPEN: a static data-track here
+      // would fire on close too and report double the opens. Closing is not
+      // a signal anyone wants.
+      if (open) toggle.setAttribute("data-track", "commands-open");
+      else toggle.removeAttribute("data-track");
+      // inert, not just visibility: a hidden drawer whose links are still
+      // tabbable is worse than no drawer at all.
+      if (open) drawer.removeAttribute("inert");
+      else drawer.setAttribute("inert", "");
+    };
+
+    toggle.addEventListener("click", () => {
+      const open = toggle.getAttribute("aria-expanded") === "true";
+      setOpen(!open);
+      // Synchronous: the .open class makes the panel visible in the same
+      // style recalc (see the visibility transition above), so focus lands
+      // without waiting on a frame. rAF would not fire in a background tab.
+      if (!open) close.focus();
+    });
+
+    close.addEventListener("click", () => {
+      setOpen(false);
+      toggle.focus();
+    });
+
+    // Escape from anywhere inside, and from the toggle itself.
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (toggle.getAttribute("aria-expanded") !== "true") return;
+      setOpen(false);
+      toggle.focus();
+    });
+
+    // A click on the page behind it reads as "I am done with this".
+    document.addEventListener("click", (event) => {
+      if (toggle.getAttribute("aria-expanded") !== "true") return;
+      const target = event.target as Node;
+      if (drawer.contains(target) || toggle.contains(target)) return;
+      setOpen(false);
+    });
+  }
+</script>
