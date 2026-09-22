@@ -31,6 +31,8 @@ const buildIsLocal = buildShaRaw === "dev";
 ---
 <Base title={title} description={description}>
 
+  <a class="skip" slot="header" href="#install">Skip to the install command</a>
+
   <header slot="header" class="rec-strip" aria-label="recording indicator">
     <span class="rec-dot"></span>
     <span class="rec-word">bragfile</span>
@@ -242,7 +244,7 @@ crustyimg (3): █▅▁▁`}
   {/* 6 — INSTALL. Signal band. The one loud moment — copy install CTA.
      Tighter padding (cta class) so the page arrives at the install
      moment instead of padding around it. */}
-  <section class="band band-signal cta">
+  <section id="install" class="band band-signal cta">
     <div class="column">
       <h2>Nothing leaves your machine.</h2>
       <p class="mt-2">The database is a file. The export is a file. The tool is a binary.</p>
@@ -281,6 +283,27 @@ crustyimg (3): █▅▁▁`}
 </Base>
 
 <style>
+  /* Skip link. Tabbing now passes four terminal frames and the log table
+     before reaching the install CTA, so the one action on the page needs
+     a bypass. Off-screen until focused. */
+  .skip {
+    position: absolute;
+    left: var(--space-3);
+    top: calc(-1 * var(--space-8));
+    z-index: 1;
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--signal);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--size-body);
+    line-height: var(--lh-body);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: top 0.12s ease-out;
+  }
+
+  .skip:focus-visible { top: var(--space-1); }
+
   /* ===== Top recording strip — replaces the panel page-header. ===== */
   .rec-strip {
     position: relative;
@@ -333,7 +356,11 @@ crustyimg (3): █▅▁▁`}
     color: var(--muted);
     letter-spacing: 0.18em;
   }
-  .rec-sep { opacity: 0.4; }
+
+  /* The separators were the last three strings under 4.5:1 (2.1:1 at
+     opacity .4). They carry no information, but --muted is quiet enough
+     to read as punctuation without dimming it further. */
+  .rec-sep { color: var(--muted); }
 
   /* GitHub icon pinned to the strip's right edge — same repo link the
      CTA carried, moved to the header. Inherits the strip's muted mono.
@@ -649,6 +676,12 @@ crustyimg (3): █▅▁▁`}
     color: inherit;
     font-size: inherit;
     line-height: inherit;
+
+    /* A module path is one unbreakable token. At 320px it measured 426px
+       and was the only element on the page pushing past the viewport —
+       a reflow failure introduced with this line. Terminal output inside
+       a .frame scrolls instead of wrapping; this is prose, so it wraps. */
+    overflow-wrap: anywhere;
   }
 
   .cta-alt a {
@@ -656,6 +689,11 @@ crustyimg (3): █▅▁▁`}
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+
+    /* 14px tall as plain inline text. Padding alone does not grow an
+       inline box's hit area vertically, so it needs inline-block. */
+    display: inline-block;
+    padding-block: var(--space-1);
   }
 
   /* ===== Attribution — quiet mono line below the CTA on --base. ===== */
@@ -692,9 +730,13 @@ crustyimg (3): █▅▁▁`}
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+
+    /* 18px tall otherwise; the icon link beside it already pads to 44px. */
+    display: inline-block;
+    padding-block: var(--space-1);
   }
   .attribution a:hover { color: var(--text); }
-  .attribution-sep { opacity: 0.4; }
+  .attribution-sep { color: var(--muted); }
 
   /* Footer GitHub link is icon-only: drop the shared underline, keep the
      icon on the meta baseline so it reads as part of the mono line.
