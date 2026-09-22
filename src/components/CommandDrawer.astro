@@ -430,6 +430,14 @@ const commandCount = groups.reduce((n, g) => n + g.commands.length, 0);
     const setOpen = (open: boolean) => {
       drawer.classList.toggle("open", open);
       toggle.setAttribute("aria-expanded", String(open));
+
+      // The analytics beacon in Base.astro reads [data-track] when a click
+      // bubbles up to document, which happens AFTER this handler. So the
+      // attribute is only present on the way OPEN: a static data-track here
+      // would fire on close too and report double the opens. Closing is not
+      // a signal anyone wants.
+      if (open) toggle.setAttribute("data-track", "commands-open");
+      else toggle.removeAttribute("data-track");
       // inert, not just visibility: a hidden drawer whose links are still
       // tabbable is worse than no drawer at all.
       if (open) drawer.removeAttribute("inert");
