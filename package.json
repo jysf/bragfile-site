@@ -8,7 +8,7 @@
     "preview": "astro preview",
     "lint": "stylelint \"src/**/*.{css,astro}\"",
     "typecheck": "tsc -p worker/tsconfig.json",
-    "test": "node --experimental-strip-types --test tests/stats-aggregate.spec.ts",
+    "test": "node --experimental-strip-types --test tests/*.spec.ts",
     "log": "bash scripts/export-log.sh",
     "og": "node scripts/og.mjs"
   },

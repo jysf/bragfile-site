@@ -73,39 +73,41 @@ function renderHtml({ events, truncated, legacySkipped }: LoadResult): string {
 <title>sitevisits - bragfile</title>
 <style>
   /* Mirrors the home page's design system (src/styles/tokens.css). Values are
-     inlined because this page is Worker-rendered, outside Astro's pipeline —
-     keep them in sync with tokens.css if the palette changes. */
+     inlined because this page is Worker-rendered, outside Astro's pipeline, so
+     stylelint's src/** glob never reaches this file. Keeping them in sync by
+     hand did not survive a palette change — tests/contrast.spec.ts now fails
+     if a color here is not a token. */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { font-family: 'Archivo', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: #282c34; color: #dce1e6; }
   body { min-height: 100dvh; padding: 2rem; }
   .wrap { max-width: 960px; margin: 0 auto; }
   h1 { font-size: 2rem; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
-  .sub { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; margin-bottom: 2rem; }
+  .sub { color: #9aa3ad; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; margin-bottom: 2rem; }
   .totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 2rem; }
   .stat { background: #1f2329; padding: 16px; }
-  .stat .label { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .stat .label { color: #9aa3ad; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; }
   .stat .num { font-size: 2.5rem; font-weight: 700; margin-top: 8px; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
   section { background: #1f2329; padding: 16px 24px; }
-  section h2 { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; color: #8a9199; margin-bottom: 12px; font-weight: 400; }
+  section h2 { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; color: #9aa3ad; margin-bottom: 12px; font-weight: 400; }
   table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.9375rem; line-height: 1.4; }
   td { padding: 8px 0; border-bottom: 1px solid #282c34; }
   tr:last-child td { border-bottom: none; }
   td.k { color: #dce1e6; }
-  td.v, th.v { color: #8a9199; text-align: right; font-variant-numeric: tabular-nums; padding-left: 1rem; width: 4rem; }
+  td.v, th.v { color: #9aa3ad; text-align: right; font-variant-numeric: tabular-nums; padding-left: 1rem; width: 4rem; }
   th.v { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; padding-bottom: 8px; }
-  .empty { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; font-style: italic; }
-  .meta { color: #8a9199; font-size: 0.8125rem; }
+  .empty { color: #9aa3ad; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; font-style: italic; }
+  .meta { color: #9aa3ad; font-size: 0.8125rem; }
   .hours { display: flex; align-items: flex-end; gap: 2px; height: 80px; margin-top: 0.25rem; }
   .hour { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; }
   .hour .bar { background: #e04e1b; width: 100%; border-radius: 2px 2px 0 0; min-height: 2px; opacity: 0.7; transition: opacity 0.2s; }
   .hour:hover .bar { opacity: 1; }
-  .hour .hr { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.6rem; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .hour .hr { color: #9aa3ad; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.6rem; margin-top: 4px; font-variant-numeric: tabular-nums; }
   .spark { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 1.5rem; line-height: 1; letter-spacing: 0; color: #e04e1b; word-break: break-all; }
-  .spark-meta { color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; margin-top: 8px; }
-  .foot { margin-top: 2rem; color: #8a9199; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-align: center; }
-  a { color: #e04e1b; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  a:hover { color: #dce1e6; }
+  .spark-meta { color: #9aa3ad; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; margin-top: 8px; }
+  .foot { margin-top: 2rem; color: #9aa3ad; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; text-align: center; }
+  a { color: #dce1e6; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: #e04e1b; }
 </style>
 </head>
 <body>
@@ -237,9 +239,9 @@ export async function handleStatsGet(_request: Request, env: Env): Promise<Respo
     console.error('[stats] error rendering dashboard:', err);
     return new Response(
       `<!doctype html><meta charset="utf-8"><title>stats unavailable</title>` +
-      `<body style="font-family:system-ui;background:#0a0a0a;color:#e5e5e5;padding:2rem">` +
+      `<body style="font-family:system-ui;background:#282c34;color:#dce1e6;padding:2rem">` +
       `<h1>stats temporarily unavailable</h1>` +
-      `<p style="color:#888">check back in a minute.</p></body>`,
+      `<p style="color:#9aa3ad">check back in a minute.</p></body>`,
       { status: 500, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
     );
   }
